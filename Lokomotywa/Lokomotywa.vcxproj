@@ -21,11 +21,14 @@
   <ItemGroup>
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Display.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Vertex.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.fs" />

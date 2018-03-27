@@ -10,8 +10,8 @@ class Shader
 {
 private:
 	static const unsigned int NUM_SHADERS = 2;
-	GLuint m_program;
-	GLuint m_shaders[NUM_SHADERS];
+	GLuint program;
+	GLuint shaders[NUM_SHADERS];
 
 	static void checkShaderError(GLuint shader, GLuint flag, bool is_program, const std::string &error_message);
 	static std::string loadShader(const std::string &filename);

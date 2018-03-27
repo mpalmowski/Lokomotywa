@@ -2,36 +2,36 @@
 
 Shader::Shader(const std::string& filename)
 {
-	m_program = glCreateProgram();
-	m_shaders[0] = createShader(loadShader(filename + ".vs"), GL_VERTEX_SHADER);
-	m_shaders[1] = createShader(loadShader(filename + ".fs"), GL_FRAGMENT_SHADER);
+	program = glCreateProgram();
+	shaders[0] = createShader(loadShader(filename + ".vs"), GL_VERTEX_SHADER);
+	shaders[1] = createShader(loadShader(filename + ".fs"), GL_FRAGMENT_SHADER);
 
 	for (unsigned int i = 0; i < NUM_SHADERS; i++)
-		glAttachShader(m_program, m_shaders[i]);
+		glAttachShader(program, shaders[i]);
 
-	glBindAttribLocation(m_program, 0, "position");
+	glBindAttribLocation(program, 0, "position");
 
-	glLinkProgram(m_program);
-	checkShaderError(m_program, GL_LINK_STATUS, true, "Program linking failed");
+	glLinkProgram(program);
+	checkShaderError(program, GL_LINK_STATUS, true, "Program linking failed");
 
-	glValidateProgram(m_program);
-	checkShaderError(m_program, GL_VALIDATE_STATUS, true, "Program is invalid");
+	glValidateProgram(program);
+	checkShaderError(program, GL_VALIDATE_STATUS, true, "Program is invalid");
 }
 
 Shader::~Shader()
 {
 	for (unsigned int i = 0; i < NUM_SHADERS; i++)
 	{
-		glDetachShader(m_program, m_shaders[i]);
-		glDeleteShader(m_shaders[i]);
+		glDetachShader(program, shaders[i]);
+		glDeleteShader(shaders[i]);
 	}
 
-	glDeleteProgram(m_program);
+	glDeleteProgram(program);
 }
 
 void Shader::bind()
 {
-	glUseProgram(m_program);
+	glUseProgram(program);
 }
 
 std::string Shader::loadShader(const std::string& filename)
