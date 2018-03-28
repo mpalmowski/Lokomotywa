@@ -5,13 +5,21 @@
 #include <fstream>
 #include <string>
 #include <GL/glew.h>
+#include "Transform.hpp"
 
 class Shader
 {
 private:
+	enum
+	{
+		TRANSFORM_U,
+		NUM_UNIFORMS
+	};
+
 	static const unsigned int NUM_SHADERS = 2;
 	GLuint program;
 	GLuint shaders[NUM_SHADERS];
+	GLuint uniforms[NUM_UNIFORMS];
 
 	static void checkShaderError(GLuint shader, GLuint flag, bool is_program, const std::string &error_message);
 	static std::string loadShader(const std::string &filename);
@@ -20,6 +28,7 @@ public:
 	Shader(const std::string &filename);
 	~Shader();
 	void bind();
+	void update(const Transform &transform);
 };
 
 #endif SHADER_H

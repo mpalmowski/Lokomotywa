@@ -27,6 +27,7 @@
     <ClInclude Include="Mesh.hpp" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.hpp" />
+    <ClInclude Include="Transform.hpp" />
     <ClInclude Include="Vertex.hpp" />
   </ItemGroup>
   <ItemGroup>

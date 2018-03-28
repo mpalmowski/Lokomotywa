@@ -3,6 +3,7 @@
 #include "Mesh.hpp"
 #include "Vertex.hpp"
 #include "Texture.hpp"
+#include "Transform.hpp"
 
 const GLuint WIDTH = 800, HEIGHT = 600;
 
@@ -24,6 +25,10 @@ int main()
 	Texture texture;
 	texture.loadRGB("rusted_steel.png");
 
+	Transform transform;
+
+	float angle = 0;
+
 	while (!display->windowShouldClose())
 	{
 		display->checkEvents();
@@ -32,9 +37,13 @@ int main()
 
 		shader.bind();
 		texture.bind(0);
+		shader.update(transform);
 		mesh.draw();
 
 		display->swapBuffers();
+
+		angle += 0.001;
+		transform.rotation.x = angle;
 	}
 
 	delete display;
