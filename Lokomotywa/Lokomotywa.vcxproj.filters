@@ -41,6 +41,9 @@
     <ClInclude Include="Vertex.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Texture.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.fs">
@@ -49,5 +52,10 @@
     <None Include="shader.vs">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="rusted_steel.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

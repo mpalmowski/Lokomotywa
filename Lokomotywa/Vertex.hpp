@@ -5,11 +5,13 @@
 
 struct Vertex
 {
-	glm::vec3 pos;
+	glm::vec3 position;
+	glm::vec2 texture_position;
 
-	Vertex(float x, float y, float z)
+	Vertex(float x, float y, float z, float tex_x, float tex_y)
 	{
-		pos = glm::vec3(x, y, z);
+		position = glm::vec3(x, y, z);
+		texture_position = glm::vec2(tex_x, tex_y);
 	}
 };
 

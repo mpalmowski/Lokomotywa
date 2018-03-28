@@ -11,6 +11,7 @@ private:
 	enum
 	{
 		POSITION_VB,
+		TEXTURE_POSITION_VB,
 		NUM_BUFFERS
 	};
 

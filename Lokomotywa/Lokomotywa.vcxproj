@@ -28,11 +28,15 @@
     <ClInclude Include="Display.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Texture.hpp" />
     <ClInclude Include="Vertex.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.fs" />
     <None Include="shader.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="rusted_steel.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8838D2AB-BA36-4C7F-9047-E6691F68A6C9}</ProjectGuid>
