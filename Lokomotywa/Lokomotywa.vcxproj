@@ -23,6 +23,7 @@
     <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.hpp" />
     <ClInclude Include="Display.hpp" />
     <ClInclude Include="Mesh.hpp" />
     <ClInclude Include="Shader.h" />

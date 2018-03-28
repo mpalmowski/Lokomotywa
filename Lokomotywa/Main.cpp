@@ -4,6 +4,7 @@
 #include "Vertex.hpp"
 #include "Texture.hpp"
 #include "Transform.hpp"
+#include "Camera.hpp"
 
 const GLuint WIDTH = 800, HEIGHT = 600;
 
@@ -25,9 +26,9 @@ int main()
 	Texture texture;
 	texture.loadRGB("rusted_steel.png");
 
-	Transform transform;
+	Camera camera(glm::vec3(0, 0, -3), 70.0f, (float)WIDTH / (float)HEIGHT, 0.01f, 1000.0f);
 
-	float angle = 0;
+	Transform transform;
 
 	while (!display->windowShouldClose())
 	{
@@ -37,13 +38,10 @@ int main()
 
 		shader.bind();
 		texture.bind(0);
-		shader.update(transform);
+		shader.update(transform, camera);
 		mesh.draw();
 
 		display->swapBuffers();
-
-		angle += 0.001;
-		transform.rotation.x = angle;
 	}
 
 	delete display;

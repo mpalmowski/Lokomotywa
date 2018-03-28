@@ -6,6 +6,7 @@
 #include <string>
 #include <GL/glew.h>
 #include "Transform.hpp"
+#include "Camera.hpp"
 
 class Shader
 {
@@ -28,7 +29,7 @@ public:
 	Shader(const std::string &filename);
 	~Shader();
 	void bind();
-	void update(const Transform &transform);
+	void update(const Transform &transform, const Camera &camera);
 };
 
 #endif SHADER_H
