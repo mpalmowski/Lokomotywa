@@ -1,6 +1,6 @@
-#include "Display.h"
+#include "Display.hpp"
 #include "Shader.h"
-#include "Mesh.h"
+#include "Mesh.hpp"
 #include "Vertex.hpp"
 #include "Texture.hpp"
 
@@ -28,7 +28,7 @@ int main()
 	{
 		display->checkEvents();
 
-		display->clearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		display->clearColor(0.2f, 0.2f, 1.0f, 1.0f);
 
 		shader.bind();
 		texture.bind(0);
