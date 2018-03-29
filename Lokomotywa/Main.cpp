@@ -1,7 +1,6 @@
 #include "Display.hpp"
 #include "Shader.h"
 #include "Mesh.hpp"
-#include "Vertex.hpp"
 #include "Texture.hpp"
 #include "Transform.hpp"
 #include "Camera.hpp"
@@ -12,14 +11,26 @@ int main()
 {
 	Display* display = new Display(WIDTH, HEIGHT);
 
-	Vertex vertices[] =
-	{
-		Vertex(-0.5, -0.5, 0, 0.0, 0.0),
-		Vertex(0, 0.5, 0, 0.5, 1.0),
-		Vertex(0.5, -0.5, 0, 1.0, 0.0)
+	std::vector<float> positions = {
+		-1, 1, 0,
+		-1, -1, 0,
+		1, 1, 0,
+		1, -1, 0
 	};
 
-	Mesh mesh(vertices, sizeof(vertices) / sizeof(vertices[0]));
+	std::vector<float> texture_positions = {
+		0, 0, 
+		0, 1,  
+		1, 0,
+		1, 1
+	};
+
+	std::vector<unsigned int> indices = {
+		0, 1, 2, 
+		1, 2, 3
+	};
+
+	Mesh mesh(positions, texture_positions, indices);
 
 	Shader shader("shader");
 

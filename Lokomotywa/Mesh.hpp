@@ -4,7 +4,6 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include  <vector>
-#include "Vertex.hpp"
 
 class Mesh
 {
@@ -13,6 +12,7 @@ private:
 	{
 		POSITION_VB,
 		TEXTURE_POSITION_VB,
+		INDICES_VB,
 		NUM_BUFFERS
 	};
 
@@ -21,34 +21,31 @@ private:
 	unsigned int draw_count;
 
 public:
-	Mesh(Vertex * vertices, unsigned int num_vertices)
+	Mesh(std::vector<float> positions, std::vector<float> texture_positions, std::vector<unsigned int> indices)
 	{
-		draw_count = num_vertices;
+		draw_count = indices.size();
 
 		glGenVertexArrays(1, &vertex_array_object);
 		glBindVertexArray(vertex_array_object);
 
-		std::vector<glm::vec3> positions;
-		std::vector<glm::vec2> texture_positions;
-
-		for (int i = 0; i<num_vertices; i++)
-		{
-			positions.push_back(vertices[i].position);
-			texture_positions.push_back(vertices[i].texture_position);
-		}
-
 		glGenBuffers(NUM_BUFFERS, vertex_array_buffers);
 		glBindBuffer(GL_ARRAY_BUFFER, vertex_array_buffers[POSITION_VB]);
-		glBufferData(GL_ARRAY_BUFFER, num_vertices * sizeof(positions[0]), &positions[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(float), &positions[0], GL_STATIC_DRAW);
 
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vertex_array_buffers[TEXTURE_POSITION_VB]);
-		glBufferData(GL_ARRAY_BUFFER, num_vertices * sizeof(texture_positions[0]), &texture_positions[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, texture_positions.size() * sizeof(float), &texture_positions[0], GL_STATIC_DRAW);
 
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertex_array_buffers[INDICES_VB]);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_UNSIGNED_INT, GL_FALSE, 0, 0);
 
 		glBindVertexArray(0);
 	}
@@ -62,7 +59,7 @@ public:
 	{
 		glBindVertexArray(vertex_array_object);
 
-		glDrawArrays(GL_TRIANGLES, 0, draw_count);
+		glDrawElements(GL_TRIANGLES, draw_count, GL_UNSIGNED_INT, (void*)0);
 
 		glBindVertexArray(0);
 	}

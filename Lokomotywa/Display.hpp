@@ -40,6 +40,7 @@ public:
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+		glfwWindowHint(GLFW_SAMPLES, 4);
 
 		try
 		{
@@ -59,6 +60,8 @@ public:
 		{
 			cout << ex.what() << endl;
 		}
+
+		glEnable(GL_MULTISAMPLE);
 	}
 
 	~Display()
