@@ -3,8 +3,10 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
-#include "Mesh.hpp"
+#include "Vertices.hpp"
 
-Mesh *createRegularPolygon(unsigned int nr_of_vertices);
+Vertices *createRegularPolygon(unsigned int nr_of_vertices, float z, float radius = 1);
+
+Vertices *createRingPolygon(unsigned int nr_of_vertices, float z, float inner_radius, float radius = 1);
 
 #endif

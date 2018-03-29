@@ -12,26 +12,9 @@ int main()
 {
 	Display* display = new Display(WIDTH, HEIGHT);
 
-	/*std::vector<float> positions = {
-		-1, 1, 0,
-		-1, -1, 0,
-		1, 1, 0,
-		1, -1, 0
-	};
-
-	std::vector<float> texture_positions = {
-		0, 0, 
-		0, 1,  
-		1, 0,
-		1, 1
-	};
-
-	std::vector<unsigned int> indices = {
-		0, 1, 2, 
-		1, 2, 3
-	};*/
-
-	Mesh *mesh = createRegularPolygon(80);
+	Vertices vertices = *createRingPolygon(80, -0.1, 0.7);
+	vertices += *createRingPolygon(80, 0.1, 0.7);
+	Mesh mesh(vertices);
 
 	Shader shader("shader");
 
@@ -51,7 +34,7 @@ int main()
 		shader.bind();
 		texture.bind(0);
 		shader.update(transform, camera);
-		mesh->draw();
+		mesh.draw();
 
 		display->swapBuffers();
 
@@ -60,5 +43,4 @@ int main()
 	}
 
 	delete display;
-	delete mesh;
 }
