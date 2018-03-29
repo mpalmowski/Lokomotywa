@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Figures.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Shader.cpp" />
   </ItemGroup>
@@ -29,6 +30,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.hpp" />
     <ClInclude Include="Transform.hpp" />
+    <ClInclude Include="Figures.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.fs" />

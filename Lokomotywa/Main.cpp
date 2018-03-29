@@ -4,6 +4,7 @@
 #include "Texture.hpp"
 #include "Transform.hpp"
 #include "Camera.hpp"
+#include "Figures.h"
 
 const GLuint WIDTH = 800, HEIGHT = 600;
 
@@ -11,7 +12,7 @@ int main()
 {
 	Display* display = new Display(WIDTH, HEIGHT);
 
-	std::vector<float> positions = {
+	/*std::vector<float> positions = {
 		-1, 1, 0,
 		-1, -1, 0,
 		1, 1, 0,
@@ -28,9 +29,9 @@ int main()
 	std::vector<unsigned int> indices = {
 		0, 1, 2, 
 		1, 2, 3
-	};
+	};*/
 
-	Mesh mesh(positions, texture_positions, indices);
+	Mesh *mesh = createRegularPolygon(80);
 
 	Shader shader("shader");
 
@@ -50,10 +51,14 @@ int main()
 		shader.bind();
 		texture.bind(0);
 		shader.update(transform, camera);
-		mesh.draw();
+		mesh->draw();
 
 		display->swapBuffers();
+
+		transform.rotation.z += 0.001;
+		camera.moveHorizontallyByAngle(0.0005);
 	}
 
 	delete display;
+	delete mesh;
 }
