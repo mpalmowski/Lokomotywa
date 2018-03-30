@@ -13,6 +13,7 @@ private:
 		POSITION_VB,
 		TEXTURE_POSITION_VB,
 		INDICES_VB,
+		NORMAL_VB,
 		NUM_BUFFERS
 	};
 
@@ -44,8 +45,11 @@ public:
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertex_array_buffers[INDICES_VB]);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, vertices.indices.size() * sizeof(unsigned int), &vertices.indices[0], GL_STATIC_DRAW);
 
+		glBindBuffer(GL_ARRAY_BUFFER, vertex_array_buffers[NORMAL_VB]);
+		glBufferData(GL_ARRAY_BUFFER, vertices.normal.size() * sizeof(float), &vertices.normal[0], GL_STATIC_DRAW);
+
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 3, GL_UNSIGNED_INT, GL_FALSE, 0, 0);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 		glBindVertexArray(0);
 	}

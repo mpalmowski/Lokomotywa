@@ -8,32 +8,26 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-using namespace std;
+
+const GLuint WIDTH = 800, HEIGHT = 600;
 
 class Display
 {
 private:
 	GLFWwindow* window;
-	int width, height;
-
-	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
-	{
-		cout << key << endl;
-		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-			glfwSetWindowShouldClose(window, GL_TRUE);
-	}
 
 public:
-	bool windowShouldClose()
+
+	int windowShouldClose()
 	{
 		return glfwWindowShouldClose(window);
 	}
 
-	Display(GLuint width, GLuint height) : width(width), height(height)
+	Display(GLFWkeyfun key_callback)
 	{
 		if (glfwInit() != GL_TRUE)
 		{
-			cout << "GLFW initialization failed" << endl;
+			std::cout << "GLFW initialization failed" << std::endl;
 		}
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -44,24 +38,25 @@ public:
 
 		try
 		{
-			window = glfwCreateWindow(this->width, this->height, "GKOM - OpenGL 01", nullptr, nullptr);
+			window = glfwCreateWindow(WIDTH, HEIGHT, "GKOM - OpenGL 01", nullptr, nullptr);
 			if (window == nullptr)
-				throw exception("GLFW window not created");
+				throw std::exception("GLFW window not created");
 			glfwMakeContextCurrent(window);
 			glfwSetKeyCallback(window, key_callback);
 
 			glewExperimental = GL_TRUE;
 			if (glewInit() != GLEW_OK)
-				throw exception("GLEW Initialization failed");
+				throw std::exception("GLEW Initialization failed");
 
-			glViewport(0, 0, this->width, this->height);
+			glViewport(0, 0, WIDTH, HEIGHT);
 		}
-		catch (exception& ex)
+		catch (std::exception &ex)
 		{
-			cout << ex.what() << endl;
+			std::cout << ex.what() << std::endl;
 		}
 
 		glEnable(GL_MULTISAMPLE);
+		glEnable(GL_DEPTH_TEST);
 	}
 
 	~Display()
@@ -83,6 +78,7 @@ public:
 	{
 		glClearColor(r, g, b, a);
 		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 };
 

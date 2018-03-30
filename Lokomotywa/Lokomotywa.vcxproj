@@ -38,6 +38,7 @@
     <None Include="shader.vs" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="red_painted_metal.jpg" />
     <Image Include="rusted_steel.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

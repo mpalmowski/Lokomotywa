@@ -11,8 +11,9 @@ class Camera
 {
 private:
 	float radius;
-	float alpha_horizontal;
+	
 public:
+	double alpha_horizontal;
 	glm::vec3 position;
 	glm::mat4 perspective;
 	glm::vec3 up = glm::vec3(0, 1, 0);
@@ -22,7 +23,7 @@ public:
 	{
 		perspective = glm::perspective(field_of_view, aspect, z_near, z_far);
 		radius = std::fabs(position.z);
-		alpha_horizontal = 3 * M_PI / 4;
+		alpha_horizontal = 4 * (float)M_PI / 4;
 	}
 
 	inline glm::mat4 getViewProjection() const

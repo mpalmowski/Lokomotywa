@@ -6,22 +6,41 @@
 #include "Camera.hpp"
 #include "Figures.h"
 
-const GLuint WIDTH = 800, HEIGHT = 600;
+const float ROT_ANGLE = 0.03;
+Camera *camera = nullptr;
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
+{
+	if (action == GLFW_PRESS || action == GLFW_REPEAT)
+	{
+		switch (key)
+		{
+		case GLFW_KEY_ESCAPE:
+			glfwSetWindowShouldClose(window, GL_TRUE);
+			break;
+		case GLFW_KEY_RIGHT:
+			camera->moveHorizontallyByAngle(ROT_ANGLE);
+			break;
+		case GLFW_KEY_LEFT:
+			camera->moveHorizontallyByAngle(-1 * ROT_ANGLE);
+			break;
+		}
+	}
+}
 
 int main()
 {
-	Display* display = new Display(WIDTH, HEIGHT);
+	Display* display = new Display(&key_callback);
 
-	Vertices vertices = *createRingPolygon(80, -0.1, 0.7);
-	vertices += *createRingPolygon(80, 0.1, 0.7);
+	Vertices vertices = connectedRings(80, 0.2, 0.8);
 	Mesh mesh(vertices);
 
 	Shader shader("shader");
 
 	Texture texture;
-	texture.loadRGB("rusted_steel.png");
+	texture.loadRGB("red_painted_metal.jpg");
 
-	Camera camera(glm::vec3(0, 0, -3), 70.0f, (float)WIDTH / (float)HEIGHT, 0.01f, 1000.0f);
+	camera = new Camera(glm::vec3(0, 0, -3), 70.0f, (float)WIDTH / (float)HEIGHT, 0.01f, 1000.0f);
 
 	Transform transform;
 
@@ -33,13 +52,12 @@ int main()
 
 		shader.bind();
 		texture.bind(0);
-		shader.update(transform, camera);
+		shader.update(transform, *camera);
 		mesh.draw();
 
 		display->swapBuffers();
 
-		transform.rotation.z += 0.001;
-		camera.moveHorizontallyByAngle(0.0005);
+		transform.rotation.z -= 0.0005;
 	}
 
 	delete display;

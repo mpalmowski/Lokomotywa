@@ -63,5 +63,8 @@
     <Image Include="rusted_steel.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="red_painted_metal.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
