@@ -46,7 +46,7 @@ public:
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, vertices.indices.size() * sizeof(unsigned int), &vertices.indices[0], GL_STATIC_DRAW);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vertex_array_buffers[NORMAL_VB]);
-		glBufferData(GL_ARRAY_BUFFER, vertices.normal.size() * sizeof(float), &vertices.normal[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vertices.normals.size() * sizeof(float), &vertices.normals[0], GL_STATIC_DRAW);
 
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);

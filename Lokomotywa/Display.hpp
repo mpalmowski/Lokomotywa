@@ -57,6 +57,7 @@ public:
 
 		glEnable(GL_MULTISAMPLE);
 		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_NORMALIZE);
 	}
 
 	~Display()

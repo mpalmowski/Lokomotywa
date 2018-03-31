@@ -32,13 +32,14 @@ int main()
 {
 	Display* display = new Display(&key_callback);
 
-	Vertices vertices = connectedRings(80, 0.2, 0.8);
+	Vertices vertices = connectedRings(80, 0.25, 0.8);
+	vertices.add(connectedPolygons(80, 0.1, 0.3));
 	Mesh mesh(vertices);
 
 	Shader shader("shader");
 
 	Texture texture;
-	texture.loadRGB("red_painted_metal.jpg");
+	texture.loadRGB("red_painted_metal.png");
 
 	camera = new Camera(glm::vec3(0, 0, -3), 70.0f, (float)WIDTH / (float)HEIGHT, 0.01f, 1000.0f);
 
@@ -48,7 +49,7 @@ int main()
 	{
 		display->checkEvents();
 
-		display->clearColor(0.2f, 0.2f, 1.0f, 1.0f);
+		display->clearColor(0.3f, 0.3f, 0.3f, 1.0f);
 
 		shader.bind();
 		texture.bind(0);

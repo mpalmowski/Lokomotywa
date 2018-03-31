@@ -63,7 +63,10 @@
     <Image Include="rusted_steel.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="red_painted_metal.jpg">
+    <Image Include="orange_painted_metal.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="red_painted_metal.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
