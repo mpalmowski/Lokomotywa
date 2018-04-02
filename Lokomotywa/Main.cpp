@@ -24,6 +24,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		case GLFW_KEY_LEFT:
 			camera->moveHorizontallyByAngle(-1 * ROT_ANGLE);
 			break;
+		case GLFW_KEY_UP:
+			camera->moveVerticallyByAngle(-1 * ROT_ANGLE);
+			break;
+		case GLFW_KEY_DOWN:
+			camera->moveVerticallyByAngle(ROT_ANGLE);
+			break;
 		}
 	}
 }
@@ -32,8 +38,9 @@ int main()
 {
 	Display* display = new Display(&key_callback);
 
-	Vertices vertices = connectedRings(80, 0.25, 0.8);
-	vertices.add(connectedPolygons(80, 0.1, 0.3));
+	Vertices vertices = wheel(80, 0.25, 20);
+	//Vertices vertices = plank(glm::vec2(-1, 0), glm::vec2(1, 0), 0.2, 0.1);
+
 	Mesh mesh(vertices);
 
 	Shader shader("shader");

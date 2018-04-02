@@ -13,7 +13,7 @@ private:
 	float radius;
 	
 public:
-	double alpha_horizontal;
+	double alpha_horizontal, alpha_vertical;
 	glm::vec3 position;
 	glm::mat4 perspective;
 	glm::vec3 up = glm::vec3(0, 1, 0);
@@ -23,7 +23,8 @@ public:
 	{
 		perspective = glm::perspective(field_of_view, aspect, z_near, z_far);
 		radius = std::fabs(position.z);
-		alpha_horizontal = 4 * (float)M_PI / 4;
+		alpha_horizontal = M_PI;
+		alpha_vertical = M_PI;
 	}
 
 	inline glm::mat4 getViewProjection() const
@@ -45,6 +46,18 @@ public:
 
 		forward.x = sin(alpha_horizontal + M_PI);
 		forward.z = cos(alpha_horizontal + M_PI);
+	}
+
+	void moveVerticallyByAngle(float angle)
+	{
+		if((angle < 0 && alpha_vertical > M_PI / 2 + angle) || (angle > 0 && alpha_vertical < 3 * M_PI / 2 - angle))
+			alpha_vertical += angle;
+
+		position.y = sin(alpha_vertical) * radius;
+		position.z = cos(alpha_vertical) * radius;
+
+		forward.y = sin(alpha_vertical + M_PI);
+		forward.z = cos(alpha_vertical + M_PI);
 	}
 };
 
