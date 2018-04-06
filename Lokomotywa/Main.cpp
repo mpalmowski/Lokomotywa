@@ -7,6 +7,7 @@
 #include "Figures.h"
 
 const float ROT_ANGLE = 0.03;
+const float RAD_STEP = 0.03;
 Camera *camera = nullptr;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
@@ -29,6 +30,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 			break;
 		case GLFW_KEY_DOWN:
 			camera->moveVerticallyByAngle(ROT_ANGLE);
+			break;
+		case GLFW_KEY_W:
+			camera->moveAlongRadius(-1 * RAD_STEP);
+			break;
+		case GLFW_KEY_S:
+			camera->moveAlongRadius(RAD_STEP);
 			break;
 		}
 	}
