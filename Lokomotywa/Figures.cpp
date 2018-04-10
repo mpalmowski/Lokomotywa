@@ -116,10 +116,10 @@ Vertices ringPolygon(unsigned int nr_of_vertices, float z, float inner_radius, f
 	return Vertices(positions, texture_positions, indices);
 }
 
-Vertices connectedRings(unsigned int nr_of_vertices, float thickness, float inner_radius, float radius)
+Vertices connectedRings(unsigned int nr_of_vertices, float depth, float inner_radius, float radius)
 {
-	Vertices vertices = ringPolygon(nr_of_vertices, -1 * thickness / 2, inner_radius, radius);
-	Vertices other = ringPolygon(nr_of_vertices, thickness / 2, inner_radius, radius);
+	Vertices vertices = ringPolygon(nr_of_vertices, -1 * depth / 2, inner_radius, radius);
+	Vertices other = ringPolygon(nr_of_vertices, depth / 2, inner_radius, radius);
 	other.turnBack();
 	vertices.add(other);
 
@@ -139,7 +139,7 @@ Vertices connectedRings(unsigned int nr_of_vertices, float thickness, float inne
 		}
 		else
 		{
-			connection.texture_positions.push_back(thickness);
+			connection.texture_positions.push_back(depth);
 		}
 	}
 
@@ -196,10 +196,10 @@ Vertices connectedRings(unsigned int nr_of_vertices, float thickness, float inne
 	return vertices;
 }
 
-Vertices connectedPolygons(unsigned int nr_of_vertices, float thickness, float radius)
+Vertices connectedPolygons(unsigned int nr_of_vertices, float depth, float radius)
 {
-	Vertices vertices = regularPolygon(nr_of_vertices, -1 * thickness / 2, radius);
-	Vertices other = regularPolygon(nr_of_vertices, thickness / 2, radius);
+	Vertices vertices = regularPolygon(nr_of_vertices, -1 * depth / 2, radius);
+	Vertices other = regularPolygon(nr_of_vertices, depth / 2, radius);
 	other.turnBack();
 	vertices.add(other);
 
@@ -224,7 +224,7 @@ Vertices connectedPolygons(unsigned int nr_of_vertices, float thickness, float r
 		}
 		else
 		{
-			connection.texture_positions.push_back(thickness);
+			connection.texture_positions.push_back(depth);
 		}
 	}
 
@@ -364,15 +364,15 @@ Vertices connectedRectangles(glm::vec2 start, glm::vec2 finish, float width, flo
 	return connected_rectangle;
 }
 
-Vertices wheel(unsigned int nr_of_vertices, float thickness, float nr_of_spokes)
+Vertices wheel(unsigned int nr_of_vertices, float depth, float thickness, float nr_of_spokes)
 {
-	const float ring_inner_radius = 0.8;
+	const float ring_inner_radius = 1 - thickness;
 	const float inner_circle_radius = 0.3;
 	const float inner_circle_thickness = 0.2;
 	const float spokes_depth = 0.15;
 	const float spokes_width = inner_circle_radius * sin(M_PI / nr_of_spokes);
 
-	Vertices outer = connectedRings(nr_of_vertices, thickness, ring_inner_radius);
+	Vertices outer = connectedRings(nr_of_vertices, depth, ring_inner_radius);
 	Vertices inner = connectedPolygons(nr_of_vertices, inner_circle_thickness, inner_circle_radius);
 	Vertices spokes;
 
