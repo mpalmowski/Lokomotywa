@@ -1,10 +1,7 @@
 #include "Display.hpp"
 #include "Shader.h"
-#include "Mesh.hpp"
-#include "Texture.hpp"
-#include "Transform.hpp"
 #include "Camera.hpp"
-#include "Figures.h"
+#include "Locomotive.hpp"
 
 const float ROT_ANGLE = 0.03;
 const float RAD_STEP = 0.03;
@@ -45,19 +42,10 @@ int main()
 {
 	Display* display = new Display(&key_callback);
 
-	Vertices vertices = wheel(80, 0.25, 20);
-	//Vertices vertices = plank(glm::vec2(-1, 0), glm::vec2(1, 0), 0.2, 0.1);
-
-	Mesh mesh(vertices);
-
+	camera = new Camera(9, (float)WIDTH / (float)HEIGHT);
 	Shader shader("shader");
 
-	Texture texture;
-	texture.loadRGB("red_painted_metal.png");
-
-	camera = new Camera(glm::vec3(0, 0, -3), 70.0f, (float)WIDTH / (float)HEIGHT, 0.01f, 1000.0f);
-
-	Transform transform;
+	Locomotive *locomotive = new Locomotive();
 
 	while (!display->windowShouldClose())
 	{
@@ -65,15 +53,12 @@ int main()
 
 		display->clearColor(0.3f, 0.3f, 0.3f, 1.0f);
 
-		shader.bind();
-		texture.bind(0);
-		shader.update(transform, *camera);
-		mesh.draw();
+		locomotive->draw(shader, *camera);
 
 		display->swapBuffers();
-
-		transform.rotation.z -= 0.0005;
 	}
 
 	delete display;
+	delete camera;
+	delete locomotive;
 }

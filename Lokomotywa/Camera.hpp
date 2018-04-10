@@ -7,25 +7,27 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+const float FIELD_OF_VIEW = 70.0;
+const float Z_NEAR = 0.01;
+const float Z_FAR = 1000.0;
+
 class Camera
 {
 private:
 	float radius;
 	glm::vec3 up = glm::vec3(0, 1, 0);
 	glm::vec3 forward = glm::vec3(0, 0, 1);
+	glm::mat4 perspective;
 	
 public:
-	double alpha_horizontal, alpha_vertical;
+	double alpha_horizontal = 0;
+	double alpha_vertical = M_PI / 2;
 	glm::vec3 position;
-	glm::mat4 perspective;
 
-	Camera(const glm::vec3 &position, float field_of_view, float aspect, float z_near, float z_far): position(position)
+	Camera(float radius, float aspect): radius(radius)
 	{
-		perspective = glm::perspective(field_of_view, aspect, z_near, z_far);
-		radius = std::fabs(position.z);
-		alpha_horizontal = M_PI;
-		alpha_vertical = M_PI / 2;
-		calculatePosiiton();
+		perspective = glm::perspective(FIELD_OF_VIEW, aspect, Z_NEAR, Z_FAR);
+		calculatePosition();
 	}
 
 	inline glm::mat4 getViewProjection() const
@@ -42,7 +44,7 @@ public:
 		if (alpha_horizontal < 0)
 			alpha_horizontal += 2 * M_PI;
 
-		calculatePosiiton();
+		calculatePosition();
 	}
 
 	void moveVerticallyByAngle(float angle)
@@ -50,7 +52,7 @@ public:
 		if((angle < 0 && alpha_vertical > angle) || (angle > 0 && alpha_vertical < M_PI - angle))
 			alpha_vertical += angle;
 
-		calculatePosiiton();
+		calculatePosition();
 	}
 
 	void moveAlongRadius(float step)
@@ -58,10 +60,10 @@ public:
 		if(step > 0 || step < 0 && radius > 1 + step)
 			radius += step;
 
-		calculatePosiiton();
+		calculatePosition();
 	}
 
-	void calculatePosiiton()
+	void calculatePosition()
 	{
 		position.z = radius * sin(alpha_vertical) * cos(alpha_horizontal);
 		position.x = radius * sin(alpha_vertical) * sin(alpha_horizontal);

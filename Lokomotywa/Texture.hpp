@@ -19,7 +19,7 @@ struct Texture
 		int width, height;
 		unsigned char* image = SOIL_load_image(filename.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
 		if (image == nullptr)
-			throw std::exception("Failed to load texture file");
+			std::cerr << "Failed to load texture file: " << filename << std::endl;
 
 		glGenTextures(1, &texture);
 		glBindTexture(GL_TEXTURE_2D, texture);
@@ -38,7 +38,7 @@ struct Texture
 	void bind(unsigned int texture_unit)
 	{
 		if (texture_unit < 0 || texture_unit > 31)
-			throw std::exception("Texture unit out of range");
+			std::cerr << "Texture unit out of range: " << texture_unit << std::endl;
 
 		glActiveTexture(GL_TEXTURE0 + texture_unit);
 		glBindTexture(GL_TEXTURE_2D, texture);
