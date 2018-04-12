@@ -20,8 +20,8 @@ private:
 	glm::mat4 perspective;
 	
 public:
-	double alpha_horizontal = 0;
-	double alpha_vertical = M_PI / 2;
+	double alpha_horizontal = M_PI / 2;
+	double alpha_vertical = M_PI / 2.5;
 	glm::vec3 position;
 
 	Camera(float radius, float aspect): radius(radius)

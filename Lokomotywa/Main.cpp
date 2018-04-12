@@ -2,9 +2,10 @@
 #include "Shader.h"
 #include "Camera.hpp"
 #include "Locomotive.hpp"
+#include <chrono>
 
 const float ROT_ANGLE = 0.03;
-const float RAD_STEP = 0.03;
+const float RAD_STEP = 0.1;
 Camera *camera = nullptr;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
@@ -42,10 +43,15 @@ int main()
 {
 	Display* display = new Display(&key_callback);
 
-	camera = new Camera(9, (float)WIDTH / (float)HEIGHT);
+	camera = new Camera(10, (float)WIDTH / (float)HEIGHT);
 	Shader shader("shader");
 
 	Locomotive *locomotive = new Locomotive();
+
+	int fps = 0;
+	auto start = std::chrono::system_clock::now();
+	auto now = start;
+	std::chrono::duration<double> duration;
 
 	while (!display->windowShouldClose())
 	{
@@ -56,6 +62,16 @@ int main()
 		locomotive->draw(shader, *camera);
 
 		display->swapBuffers();
+
+		fps++;
+		now = std::chrono::system_clock::now();
+		duration = now - start;
+		if(duration.count() > 1)
+		{
+			std::cout << "FPS: " << fps << std::endl;
+			start = std::chrono::system_clock::now();
+			fps = 0;
+		}
 	}
 
 	delete display;

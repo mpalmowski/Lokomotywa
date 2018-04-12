@@ -6,5 +6,5 @@ varying vec3 normal0;
 
 void main()
 {
-	gl_FragColor = texture2D(diffuse, texture_position0) * clamp(dot(-vec3(0,0,1), normal0), 0.2, 1.0);
+	gl_FragColor = texture2D(diffuse, texture_position0) * clamp(dot(-vec3(0,-1,-1), normal0), 0.2, 0.8);
 }

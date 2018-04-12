@@ -11,11 +11,14 @@ private:
 
 	float alpha = 0;
 public:
-	RenderedObject(Vertices &vertices, const std::string &texture_file): vertices(vertices)
+	RenderedObject(Vertices &vertices, const std::string &texture_file, bool alpha_channel = false): vertices(vertices)
 	{
 		mesh = new Mesh(vertices);
 
-		texture.loadRGB(texture_file);
+		if (!alpha_channel)
+			texture.loadRGB(texture_file);
+		else
+			texture.loadRGBA(texture_file);
 	}
 
 	~RenderedObject()
@@ -35,6 +38,11 @@ public:
 		transform.rotation.x += x;
 		transform.rotation.y += y;
 		transform.rotation.z += z;
+	}
+
+	glm::vec3 getPosition()
+	{
+		return transform.position;
 	}
 
 	void moveInCircleByAngle(float angle, float radius)

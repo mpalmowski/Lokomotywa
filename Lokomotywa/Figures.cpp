@@ -266,7 +266,18 @@ Vertices rectangle(glm::vec3 bottom_left, glm::vec3 bottom_right, glm::vec3 top_
 	width = glm::length(glm::vec3(bottom_right - bottom_left));
 	height = glm::length(glm::vec3(top_left - bottom_left));
 
-	if(width > 1 || height > 1)
+	if(width/height > 10 || width/height < 0.01)
+	{
+		float min = std::min(width, height);
+		width /= min;
+		height /= min;
+	}
+	else if (width > 5 || height > 5)
+	{
+		width /= 5;
+		height /= 5;
+	}
+	else if (width > 1 || height > 1)
 	{
 		float max = std::max(width, height);
 		width /= max;
@@ -299,14 +310,15 @@ Vertices rectangle(glm::vec3 bottom_left, glm::vec3 bottom_right, glm::vec3 top_
 
 	for (int i = 0; i < 4; ++i)
 	{
-		if (i < 2)
-			rect.texture_positions.push_back(0);
-		else
-			rect.texture_positions.push_back(height);
-
 		rect.texture_positions.push_back((i % 2) * width);
+
+		if (i < 2)
+			rect.texture_positions.push_back(height);
+		else
+			rect.texture_positions.push_back(0);
 	}
 
+	rect.CalcNormals();
 	return rect;
 }
 
@@ -329,34 +341,34 @@ Vertices connectedRectangles(glm::vec2 start, glm::vec2 finish, float width, flo
 	finish_2.y = finish.y + (finish.x - start.x) * ratio / 2;
 
 	Vertices rect_front = rectangle(glm::vec3(start_1, -1 * depth / 2), glm::vec3(start_2, -1 * depth / 2),
-	                               glm::vec3(finish_1, -1 * depth / 2), glm::vec3(finish_2, -1 * depth / 2));
+	                                glm::vec3(finish_1, -1 * depth / 2), glm::vec3(finish_2, -1 * depth / 2));
 
 	connected_rectangle.add(rect_front);
 
 	Vertices rect_right = rectangle(glm::vec3(start_2, -1 * depth / 2), glm::vec3(start_2, depth / 2),
-	                               glm::vec3(finish_2, -1 * depth / 2), glm::vec3(finish_2, depth / 2));
+	                                glm::vec3(finish_2, -1 * depth / 2), glm::vec3(finish_2, depth / 2));
 
 	connected_rectangle.add(rect_right);
 
 	Vertices rect_left = rectangle(glm::vec3(start_1, depth / 2), glm::vec3(start_1, -1 * depth / 2),
-	                              glm::vec3(finish_1, depth / 2), glm::vec3(finish_1, -1 * depth / 2));
+	                               glm::vec3(finish_1, depth / 2), glm::vec3(finish_1, -1 * depth / 2));
 
 	connected_rectangle.add(rect_left);
 
 	Vertices rect_back = rectangle(glm::vec3(start_2, depth / 2), glm::vec3(start_1, depth / 2),
-	                              glm::vec3(finish_2, depth / 2), glm::vec3(finish_1, depth / 2));
+	                               glm::vec3(finish_2, depth / 2), glm::vec3(finish_1, depth / 2));
 
 	connected_rectangle.add(rect_back);
 
 	if (with_top_and_bottom)
 	{
 		Vertices rect_top = rectangle(glm::vec3(finish_2, depth / 2), glm::vec3(finish_1, depth / 2),
-			glm::vec3(finish_2, -1 * depth / 2), glm::vec3(finish_1, -1 * depth / 2));
+		                              glm::vec3(finish_2, -1 * depth / 2), glm::vec3(finish_1, -1 * depth / 2));
 
 		connected_rectangle.add(rect_top);
 
 		Vertices rect_bottom = rectangle(glm::vec3(start_1, depth / 2), glm::vec3(start_2, depth / 2),
-			glm::vec3(start_1, -1 * depth / 2), glm::vec3(start_2, -1 * depth / 2));
+		                                 glm::vec3(start_1, -1 * depth / 2), glm::vec3(start_2, -1 * depth / 2));
 
 		connected_rectangle.add(rect_bottom);
 	}
@@ -364,15 +376,15 @@ Vertices connectedRectangles(glm::vec2 start, glm::vec2 finish, float width, flo
 	return connected_rectangle;
 }
 
-Vertices wheel(unsigned int nr_of_vertices, float depth, float thickness, float nr_of_spokes)
+Vertices wheel(unsigned int nr_of_vertices, float depth, float thickness, float nr_of_spokes, float radius)
 {
-	const float ring_inner_radius = 1 - thickness;
+	const float ring_inner_radius = radius - thickness;
 	const float inner_circle_radius = 0.3;
 	const float inner_circle_thickness = 0.2;
 	const float spokes_depth = 0.15;
 	const float spokes_width = inner_circle_radius * sin(M_PI / nr_of_spokes);
 
-	Vertices outer = connectedRings(nr_of_vertices, depth, ring_inner_radius);
+	Vertices outer = connectedRings(nr_of_vertices, depth, ring_inner_radius, radius);
 	Vertices inner = connectedPolygons(nr_of_vertices, inner_circle_thickness, inner_circle_radius);
 	Vertices spokes;
 
@@ -404,10 +416,10 @@ Vertices wheel(unsigned int nr_of_vertices, float depth, float thickness, float 
 
 		spokes_start.push_back(glm::vec2(x, y));
 
-		x1 = x1 / inner_circle_radius;
-		y1 = y1 / inner_circle_radius;
-		x2 = x2 / inner_circle_radius;
-		y2 = y2 / inner_circle_radius;
+		x1 = x1 / inner_circle_radius * radius;
+		y1 = y1 / inner_circle_radius * radius;
+		x2 = x2 / inner_circle_radius * radius;
+		y2 = y2 / inner_circle_radius * radius;
 
 		def_x = (x2 - x1) / 4;
 		def_y = (y2 - y1) / 4;
@@ -427,4 +439,67 @@ Vertices wheel(unsigned int nr_of_vertices, float depth, float thickness, float 
 	outer.add(spokes);
 
 	return outer;
+}
+
+Vertices world(unsigned int nr_of_vertices, float radius)
+{
+	std::vector<float> positions;
+	std::vector<float> texture_positions;
+	std::vector<unsigned int> indices;
+
+	double alpha_horizontal = 0, alpha_vertical = M_PI / 2;
+	float x, y, z;
+
+	for (unsigned int i = 0; i < nr_of_vertices * nr_of_vertices; ++i)
+	{
+		z = radius * sin(alpha_vertical) * cos(alpha_horizontal);
+		x = radius * sin(alpha_vertical) * sin(alpha_horizontal);
+		y = radius * cos(alpha_vertical);
+
+		positions.push_back(x);
+		positions.push_back(y);
+		positions.push_back(z);
+
+		texture_positions.push_back(alpha_horizontal / (2 * M_PI));
+		texture_positions.push_back(alpha_vertical / (M_PI / 2));
+
+		alpha_horizontal += 2 * M_PI / nr_of_vertices;
+
+		if (alpha_horizontal >= 2 * M_PI)
+		{
+			alpha_horizontal = 0;
+
+			z = radius * sin(alpha_vertical) * cos(alpha_horizontal);
+			x = radius * sin(alpha_vertical) * sin(alpha_horizontal);
+			y = radius * cos(alpha_vertical);
+
+			positions.push_back(x);
+			positions.push_back(y);
+			positions.push_back(z);
+
+			texture_positions.push_back(1);
+			texture_positions.push_back(alpha_vertical / (M_PI / 2));
+
+			alpha_vertical -= M_PI / 2 / (nr_of_vertices - 1);
+
+			/*if (alpha_vertical < M_PI / 2 / (nr_of_vertices - 1))
+				alpha_vertical = 0;*/
+		}
+	}
+
+	for (unsigned int i = 0; i < nr_of_vertices; ++i)
+	{
+		for (unsigned int j = 0; j < nr_of_vertices - 1; ++j)
+		{
+			indices.push_back(i + (j + 1) * (nr_of_vertices + 1));
+			indices.push_back(i + j * (nr_of_vertices + 1) + 1);
+			indices.push_back(i + j * (nr_of_vertices + 1));
+
+			indices.push_back(i + (j + 1) * (nr_of_vertices + 1));
+			indices.push_back(i + (j + 1) * (nr_of_vertices + 1) + 1);
+			indices.push_back(i + j * (nr_of_vertices + 1) + 1);
+		}
+	}
+
+	return Vertices(positions, texture_positions, indices);
 }

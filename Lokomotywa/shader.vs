@@ -8,10 +8,11 @@ varying vec2 texture_position0;
 varying vec3 normal0;
 
 uniform mat4 transform;
+uniform mat4 camera;
 
 void main()
 {
-	gl_Position  = transform * vec4(position, 1.0);
+	gl_Position  = camera * transform * vec4(position, 1.0);
 	texture_position0 = texture_position;
 	normal0 = (transform * vec4(normal, 0.0)).xyz;
 }

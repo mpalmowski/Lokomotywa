@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\textures">
+      <UniqueIdentifier>{c43bbcda-00c3-41aa-9377-9fb43f62900c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -64,22 +67,34 @@
     <None Include="shader.vs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="sky_shader.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="sky_shader.vs">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="rusted_steel.png">
-      <Filter>Resource Files</Filter>
+    <Image Include="textures\grass.jpg">
+      <Filter>Resource Files\textures</Filter>
     </Image>
-    <Image Include="orange_painted_metal.jpg">
-      <Filter>Resource Files</Filter>
+    <Image Include="textures\green_planks.jpg">
+      <Filter>Resource Files\textures</Filter>
     </Image>
-    <Image Include="red_painted_metal.png">
-      <Filter>Resource Files</Filter>
+    <Image Include="textures\ivy.jpg">
+      <Filter>Resource Files\textures</Filter>
     </Image>
-    <Image Include="planks.jpg">
-      <Filter>Resource Files</Filter>
+    <Image Include="textures\orange_painted_metal.jpg">
+      <Filter>Resource Files\textures</Filter>
     </Image>
-    <Image Include="green_planks.jpg">
-      <Filter>Resource Files</Filter>
+    <Image Include="textures\panorama2.jpg">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="textures\red_painted_metal.png">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="textures\sky_povray.jpg">
+      <Filter>Resource Files\textures</Filter>
     </Image>
   </ItemGroup>
 </Project>

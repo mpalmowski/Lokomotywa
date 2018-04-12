@@ -23,6 +23,31 @@ public:
 		return glfwWindowShouldClose(window);
 	}
 
+	void setLight()
+	{
+		glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
+
+		GLfloat qaAmbientLight[] = { 0.2, 0.2, 0.2, 1.0 };
+		GLfloat qaDiffuseLight[] = { 0.8, 0.8, 0.8, 1.0 };
+		GLfloat qaSpecularLight[] = { 1.0, 1.0, 1.0, 1.0 };
+		glLightfv(GL_LIGHT0, GL_AMBIENT, qaAmbientLight);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, qaDiffuseLight);
+		glLightfv(GL_LIGHT0, GL_SPECULAR, qaSpecularLight);
+
+		GLfloat qaLightPosition[] = { 0.5, 0.5, 0.0, 1.0 };
+		glLightfv(GL_LIGHT0, GL_POSITION, qaLightPosition);
+
+		GLfloat qaBlack[] = { 0.0, 0.0, 0.0, 1.0 };
+		GLfloat qaGreen[] = { 0.0, 1.0, 0.0, 1.0 };
+		GLfloat qaWhite[] = { 1.0, 1.0, 1.0, 1.0 };
+		glMaterialfv(GL_FRONT, GL_AMBIENT, qaGreen);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, qaGreen);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, qaWhite);
+		glMaterialf(GL_FRONT, GL_SHININESS, 60.0);
+	}
+
 	Display(GLFWkeyfun key_callback)
 	{
 		if (glfwInit() != GL_TRUE)
@@ -58,6 +83,8 @@ public:
 		glEnable(GL_MULTISAMPLE);
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_NORMALIZE);
+
+		//setLight();
 	}
 
 	~Display()

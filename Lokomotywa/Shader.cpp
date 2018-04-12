@@ -20,6 +20,7 @@ Shader::Shader(const std::string& filename)
 	checkShaderError(program, GL_VALIDATE_STATUS, true, "Program is invalid");
 
 	uniforms[TRANSFORM_U] = glGetUniformLocation(program, "transform");
+	uniforms[CAMERA_U] = glGetUniformLocation(program, "camera");
 }
 
 Shader::~Shader()
@@ -40,8 +41,14 @@ void Shader::bind()
 
 void Shader::update(const Transform& transform, const Camera &camera)
 {
-	glm::mat4 model = camera.getViewProjection() * transform.getModel();
+	glm::mat4 model = transform.getModel();
 	glUniformMatrix4fv(uniforms[TRANSFORM_U], 1, GL_FALSE, &model[0][0]);
+
+	glm::mat4 camera_model = camera.getViewProjection();
+	glUniformMatrix4fv(uniforms[CAMERA_U], 1, GL_FALSE, &camera_model[0][0]);
+
+	/*glm::mat4 model = camera.getViewProjection() * transform.getModel();
+	glUniformMatrix4fv(uniforms[TRANSFORM_U], 1, GL_FALSE, &model[0][0]);*/
 }
 
 std::string Shader::loadShader(const std::string& filename)

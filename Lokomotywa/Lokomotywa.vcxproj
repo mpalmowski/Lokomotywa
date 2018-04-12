@@ -38,13 +38,17 @@
   <ItemGroup>
     <None Include="shader.fs" />
     <None Include="shader.vs" />
+    <None Include="sky_shader.fs" />
+    <None Include="sky_shader.vs" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="green_planks.jpg" />
-    <Image Include="orange_painted_metal.jpg" />
-    <Image Include="planks.jpg" />
-    <Image Include="red_painted_metal.png" />
-    <Image Include="rusted_steel.png" />
+    <Image Include="textures\grass.jpg" />
+    <Image Include="textures\green_planks.jpg" />
+    <Image Include="textures\ivy.jpg" />
+    <Image Include="textures\orange_painted_metal.jpg" />
+    <Image Include="textures\panorama2.jpg" />
+    <Image Include="textures\red_painted_metal.png" />
+    <Image Include="textures\sky_povray.jpg" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8838D2AB-BA36-4C7F-9047-E6691F68A6C9}</ProjectGuid>

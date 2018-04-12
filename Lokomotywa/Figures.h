@@ -18,6 +18,8 @@ Vertices rectangle(glm::vec3 bottom_left, glm::vec3 bottom_right, glm::vec3 top_
 
 Vertices connectedRectangles(glm::vec2 start, glm::vec2 finish, float width, float depth, bool with_top_and_bottom = false);
 
-Vertices wheel(unsigned int nr_of_vertices, float depth, float thickness, float nr_of_spokes);
+Vertices wheel(unsigned int nr_of_vertices, float depth, float thickness, float nr_of_spokes, float radius = 1);
+
+Vertices world(unsigned int nr_of_vertices, float radius);
 
 #endif

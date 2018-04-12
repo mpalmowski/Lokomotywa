@@ -14,6 +14,7 @@ private:
 	enum
 	{
 		TRANSFORM_U,
+		CAMERA_U,
 		NUM_UNIFORMS
 	};
 
