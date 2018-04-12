@@ -49,7 +49,7 @@ public:
 
 	void moveVerticallyByAngle(float angle)
 	{
-		if((angle < 0 && alpha_vertical > angle) || (angle > 0 && alpha_vertical < M_PI - angle))
+		if((angle < 0 && alpha_vertical > -2 * angle) || (angle > 0 && alpha_vertical < M_PI / 2 - angle))
 			alpha_vertical += angle;
 
 		calculatePosition();

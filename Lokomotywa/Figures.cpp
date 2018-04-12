@@ -322,11 +322,11 @@ Vertices rectangle(glm::vec3 bottom_left, glm::vec3 bottom_right, glm::vec3 top_
 	return rect;
 }
 
-Vertices connectedRectangles(glm::vec2 start, glm::vec2 finish, float width, float depth, bool with_top_and_bottom)
+Vertices connectedRectangles(glm::vec3 start, glm::vec3 finish, float width, float depth, bool with_top_and_bottom)
 {
 	Vertices connected_rectangle;
 
-	float height = sqrt(pow(finish.x - start.x, 2) + pow(finish.y - start.y, 2));
+	float height = glm::length(glm::vec3(finish - start));
 	float ratio = width / height;
 
 	glm::vec2 start_1, start_2, finish_1, finish_2;
@@ -340,40 +340,45 @@ Vertices connectedRectangles(glm::vec2 start, glm::vec2 finish, float width, flo
 	finish_2.x = finish.x - (finish.y - start.y) * ratio / 2;
 	finish_2.y = finish.y + (finish.x - start.x) * ratio / 2;
 
-	Vertices rect_front = rectangle(glm::vec3(start_1, -1 * depth / 2), glm::vec3(start_2, -1 * depth / 2),
-	                                glm::vec3(finish_1, -1 * depth / 2), glm::vec3(finish_2, -1 * depth / 2));
+	Vertices rect_front = rectangle(glm::vec3(start_1, start.z + -1 * depth / 2), glm::vec3(start_2, start.z + -1 * depth / 2),
+	                                glm::vec3(finish_1, start.z + -1 * depth / 2), glm::vec3(finish_2, start.z + -1 * depth / 2));
 
 	connected_rectangle.add(rect_front);
 
-	Vertices rect_right = rectangle(glm::vec3(start_2, -1 * depth / 2), glm::vec3(start_2, depth / 2),
-	                                glm::vec3(finish_2, -1 * depth / 2), glm::vec3(finish_2, depth / 2));
+	Vertices rect_right = rectangle(glm::vec3(start_2, start.z + -1 * depth / 2), glm::vec3(start_2, start.z + depth / 2),
+	                                glm::vec3(finish_2, start.z + -1 * depth / 2), glm::vec3(finish_2, start.z + depth / 2));
 
 	connected_rectangle.add(rect_right);
 
-	Vertices rect_left = rectangle(glm::vec3(start_1, depth / 2), glm::vec3(start_1, -1 * depth / 2),
-	                               glm::vec3(finish_1, depth / 2), glm::vec3(finish_1, -1 * depth / 2));
+	Vertices rect_left = rectangle(glm::vec3(start_1, start.z + depth / 2), glm::vec3(start_1, start.z + -1 * depth / 2),
+	                               glm::vec3(finish_1, start.z + depth / 2), glm::vec3(finish_1, start.z + -1 * depth / 2));
 
 	connected_rectangle.add(rect_left);
 
-	Vertices rect_back = rectangle(glm::vec3(start_2, depth / 2), glm::vec3(start_1, depth / 2),
-	                               glm::vec3(finish_2, depth / 2), glm::vec3(finish_1, depth / 2));
+	Vertices rect_back = rectangle(glm::vec3(start_2, start.z + depth / 2), glm::vec3(start_1, start.z + depth / 2),
+	                               glm::vec3(finish_2, start.z + depth / 2), glm::vec3(finish_1, start.z + depth / 2));
 
 	connected_rectangle.add(rect_back);
 
 	if (with_top_and_bottom)
 	{
-		Vertices rect_top = rectangle(glm::vec3(finish_2, depth / 2), glm::vec3(finish_1, depth / 2),
-		                              glm::vec3(finish_2, -1 * depth / 2), glm::vec3(finish_1, -1 * depth / 2));
+		Vertices rect_top = rectangle(glm::vec3(finish_2, start.z + depth / 2), glm::vec3(finish_1, start.z + depth / 2),
+		                              glm::vec3(finish_2, start.z + -1 * depth / 2), glm::vec3(finish_1, start.z + -1 * depth / 2));
 
 		connected_rectangle.add(rect_top);
 
-		Vertices rect_bottom = rectangle(glm::vec3(start_1, depth / 2), glm::vec3(start_2, depth / 2),
-		                                 glm::vec3(start_1, -1 * depth / 2), glm::vec3(start_2, -1 * depth / 2));
+		Vertices rect_bottom = rectangle(glm::vec3(start_1, start.z + depth / 2), glm::vec3(start_2, start.z + depth / 2),
+		                                 glm::vec3(start_1, start.z + -1 * depth / 2), glm::vec3(start_2, start.z + -1 * depth / 2));
 
 		connected_rectangle.add(rect_bottom);
 	}
 
 	return connected_rectangle;
+}
+
+Vertices connectedRectangles(glm::vec2 start, glm::vec2 finish, float width, float depth, bool with_top_and_bottom)
+{
+	return connectedRectangles(glm::vec3(start, 0), glm::vec3(finish, 0), width, depth, with_top_and_bottom);
 }
 
 Vertices wheel(unsigned int nr_of_vertices, float depth, float thickness, float nr_of_spokes, float radius)

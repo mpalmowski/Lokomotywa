@@ -16,6 +16,9 @@
     <Filter Include="Resource Files\textures">
       <UniqueIdentifier>{c43bbcda-00c3-41aa-9377-9fb43f62900c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\shaders">
+      <UniqueIdentifier>{218455a9-7984-4592-9cd2-c88a744b0244}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -62,16 +65,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.fs">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\shaders</Filter>
     </None>
     <None Include="shader.vs">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\shaders</Filter>
     </None>
     <None Include="sky_shader.fs">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\shaders</Filter>
     </None>
     <None Include="sky_shader.vs">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +97,9 @@
       <Filter>Resource Files\textures</Filter>
     </Image>
     <Image Include="textures\sky_povray.jpg">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="textures\bricks.jpg">
       <Filter>Resource Files\textures</Filter>
     </Image>
   </ItemGroup>

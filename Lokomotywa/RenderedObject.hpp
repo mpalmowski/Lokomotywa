@@ -13,7 +13,7 @@ private:
 public:
 	RenderedObject(Vertices &vertices, const std::string &texture_file, bool alpha_channel = false): vertices(vertices)
 	{
-		mesh = new Mesh(vertices);
+		mesh = new Mesh(this->vertices);
 
 		if (!alpha_channel)
 			texture.loadRGB(texture_file);
@@ -24,6 +24,18 @@ public:
 	~RenderedObject()
 	{
 		delete mesh;
+	}
+
+	Vertices getVertices()
+	{
+		return vertices;
+	}
+
+	void merge(RenderedObject *other)
+	{
+		vertices.add(other->getVertices());
+		delete mesh;
+		mesh = new Mesh(vertices);
 	}
 
 	void moveBy(float x, float y, float z)

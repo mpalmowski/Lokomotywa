@@ -43,7 +43,7 @@ int main()
 {
 	Display* display = new Display(&key_callback);
 
-	camera = new Camera(10, (float)WIDTH / (float)HEIGHT);
+	camera = new Camera(12, (float)WIDTH / (float)HEIGHT);
 	Shader shader("shader");
 
 	Locomotive *locomotive = new Locomotive();

@@ -16,6 +16,8 @@ Vertices connectedPolygons(unsigned int nr_of_vertices, float depth, float radiu
 
 Vertices rectangle(glm::vec3 bottom_left, glm::vec3 bottom_right, glm::vec3 top_left, glm::vec3 top_right);
 
+Vertices connectedRectangles(glm::vec3 start, glm::vec3 finish, float width, float depth, bool with_top_and_bottom = false);
+
 Vertices connectedRectangles(glm::vec2 start, glm::vec2 finish, float width, float depth, bool with_top_and_bottom = false);
 
 Vertices wheel(unsigned int nr_of_vertices, float depth, float thickness, float nr_of_spokes, float radius = 1);

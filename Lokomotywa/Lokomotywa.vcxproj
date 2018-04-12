@@ -42,6 +42,7 @@
     <None Include="sky_shader.vs" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="textures\bricks.jpg" />
     <Image Include="textures\grass.jpg" />
     <Image Include="textures\green_planks.jpg" />
     <Image Include="textures\ivy.jpg" />
