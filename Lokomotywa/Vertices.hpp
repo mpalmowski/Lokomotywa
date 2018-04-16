@@ -27,12 +27,12 @@ public:
 	Vertices(std::vector<float> positions, std::vector<float> texture_positions, std::vector<unsigned int> indices):
 		positions(positions), texture_positions(texture_positions), indices(indices)
 	{
-		CalcNormals();
+		calcNormals();
 	}
 
 	Vertices() = default;
 
-	void add(Vertices& other)
+	void add(Vertices& other, bool calc_normals = true)
 	{
 		int start_size = indices.size();
 		int move = positions.size() / 3;
@@ -46,10 +46,11 @@ public:
 			indices[i] += move;
 		}
 
-		CalcNormals();
+		if(calc_normals)
+			calcNormals();
 	}
 
-	void turnBack()
+	void turnInsideOut()
 	{
 		for(int i = 0; i<indices.size(); i+=3)
 		{
@@ -59,7 +60,29 @@ public:
 		}
 	}
 
-	void CalcNormals()
+	void turnBack()
+	{
+		for (int i = 0; i<positions.size(); i += 3)
+		{
+			positions[i + 2] *= -1;
+		}
+
+		turnInsideOut();
+
+		calcNormals();
+	}
+
+	void moveBy(float x, float y, float z)
+	{
+		for(int i = 0; i < positions.size(); i += 3)
+		{
+			positions[i] += x;
+			positions[i + 1] += y;
+			positions[i + 2] += z;
+		}
+	}
+
+	void calcNormals()
 	{
 		std::vector<glm::vec3> normals_vec;
 		std::vector<glm::vec3> positions_vec = translateFloatsToVector(positions);

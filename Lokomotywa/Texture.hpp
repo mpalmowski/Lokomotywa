@@ -62,11 +62,23 @@ struct Texture
 
 	void bind(unsigned int texture_unit)
 	{
+		while (texture_unit < 0)
+			texture_unit += 31;
+
+		while (texture_unit > 31)
+			texture_unit -= 31;
+
 		if (texture_unit < 0 || texture_unit > 31)
 			std::cerr << "Texture unit out of range: " << texture_unit << std::endl;
 
 		glActiveTexture(GL_TEXTURE0 + texture_unit);
 		glBindTexture(GL_TEXTURE_2D, texture);
+	}
+
+	void unbind(unsigned int texture_unit)
+	{
+		glActiveTexture(GL_TEXTURE0 + texture_unit);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 };
 

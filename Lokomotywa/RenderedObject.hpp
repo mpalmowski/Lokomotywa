@@ -78,9 +78,10 @@ public:
 	void draw(unsigned int texture_unit, Shader &shader, Camera &camera)
 	{
 		shader.bind();
-		texture.bind(0);
+		texture.bind(texture_unit);
 		shader.update(transform, camera);
 		mesh->draw();
+		texture.unbind(texture_unit);
 	}
 };
 

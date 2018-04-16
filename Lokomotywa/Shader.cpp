@@ -21,6 +21,7 @@ Shader::Shader(const std::string& filename)
 
 	uniforms[TRANSFORM_U] = glGetUniformLocation(program, "transform");
 	uniforms[CAMERA_U] = glGetUniformLocation(program, "camera");
+	uniforms[LIGHT_POWER_U] = glGetUniformLocation(program, "light_power");
 }
 
 Shader::~Shader()
@@ -47,8 +48,7 @@ void Shader::update(const Transform& transform, const Camera &camera)
 	glm::mat4 camera_model = camera.getViewProjection();
 	glUniformMatrix4fv(uniforms[CAMERA_U], 1, GL_FALSE, &camera_model[0][0]);
 
-	/*glm::mat4 model = camera.getViewProjection() * transform.getModel();
-	glUniformMatrix4fv(uniforms[TRANSFORM_U], 1, GL_FALSE, &model[0][0]);*/
+	glUniform2f(uniforms[LIGHT_POWER_U], camera.light_power.x, camera.light_power.y);
 }
 
 std::string Shader::loadShader(const std::string& filename)

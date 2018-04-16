@@ -50,6 +50,7 @@
     <Image Include="textures\panorama2.jpg" />
     <Image Include="textures\red_painted_metal.png" />
     <Image Include="textures\sky_povray.jpg" />
+    <Image Include="textures\steel.jpg" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8838D2AB-BA36-4C7F-9047-E6691F68A6C9}</ProjectGuid>

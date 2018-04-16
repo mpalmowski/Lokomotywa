@@ -6,10 +6,18 @@
 
 const float ROT_ANGLE = 0.03;
 const float RAD_STEP = 0.1;
+const float LIGHT_STEP = 0.05;
 Camera *camera = nullptr;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
+	/**
+	 * Sterowanie:
+	 *	strza³ki - poruszanie kamery wokó³ obiektu
+	 *	w, s - kamera bli¿ej/dalej obiektu
+	 *	z, x - oœwietlenie ogólne +/-
+	 *	c, v - oœwietlenie punktowe +/-
+	 */
 	if (action == GLFW_PRESS || action == GLFW_REPEAT)
 	{
 		switch (key)
@@ -34,6 +42,18 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 			break;
 		case GLFW_KEY_S:
 			camera->moveAlongRadius(RAD_STEP);
+			break;
+		case GLFW_KEY_Z:
+			camera->adjustLight(-LIGHT_STEP, 0);
+			break;
+		case GLFW_KEY_X:
+			camera->adjustLight(LIGHT_STEP, 0);
+			break;
+		case GLFW_KEY_C:
+			camera->adjustLight(0, -LIGHT_STEP);
+			break;
+		case GLFW_KEY_V:
+			camera->adjustLight(0, LIGHT_STEP);
 			break;
 		}
 	}

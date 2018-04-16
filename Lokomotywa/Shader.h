@@ -15,6 +15,7 @@ private:
 	{
 		TRANSFORM_U,
 		CAMERA_U,
+		LIGHT_POWER_U,
 		NUM_UNIFORMS
 	};
 

@@ -20,6 +20,8 @@ private:
 	glm::mat4 perspective;
 	
 public:
+	glm::vec2 light_power = glm::vec2(0.2, 0.8);
+
 	double alpha_horizontal = M_PI / 2;
 	double alpha_vertical = M_PI / 2.5;
 	glm::vec3 position;
@@ -72,6 +74,22 @@ public:
 		forward.z = -1 * position.z;
 		forward.x = -1 * position.x;
 		forward.y = -1 * position.y;
+	}
+
+	void adjustLight(float x, float y)
+	{
+		light_power.x += x;
+		light_power.y += y;
+
+		if (light_power.x < 0)
+			light_power.x = 0;
+		else if (light_power.x > 1)
+			light_power.x = 1;
+
+		if (light_power.y < 0)
+			light_power.y = 0;
+		else if (light_power.y > 1)
+			light_power.y = 1;
 	}
 };
 

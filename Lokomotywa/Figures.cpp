@@ -120,7 +120,7 @@ Vertices connectedRings(unsigned int nr_of_vertices, float depth, float inner_ra
 {
 	Vertices vertices = ringPolygon(nr_of_vertices, -1 * depth / 2, inner_radius, radius);
 	Vertices other = ringPolygon(nr_of_vertices, depth / 2, inner_radius, radius);
-	other.turnBack();
+	other.turnInsideOut();
 	vertices.add(other);
 
 	Vertices connection;
@@ -200,7 +200,7 @@ Vertices connectedPolygons(unsigned int nr_of_vertices, float depth, float radiu
 {
 	Vertices vertices = regularPolygon(nr_of_vertices, -1 * depth / 2, radius);
 	Vertices other = regularPolygon(nr_of_vertices, depth / 2, radius);
-	other.turnBack();
+	other.turnInsideOut();
 	vertices.add(other);
 
 	Vertices connection;
@@ -318,7 +318,7 @@ Vertices rectangle(glm::vec3 bottom_left, glm::vec3 bottom_right, glm::vec3 top_
 			rect.texture_positions.push_back(0);
 	}
 
-	rect.CalcNormals();
+	rect.calcNormals();
 	return rect;
 }
 
@@ -343,34 +343,34 @@ Vertices connectedRectangles(glm::vec3 start, glm::vec3 finish, float width, flo
 	Vertices rect_front = rectangle(glm::vec3(start_1, start.z + -1 * depth / 2), glm::vec3(start_2, start.z + -1 * depth / 2),
 	                                glm::vec3(finish_1, start.z + -1 * depth / 2), glm::vec3(finish_2, start.z + -1 * depth / 2));
 
-	connected_rectangle.add(rect_front);
+	connected_rectangle.add(rect_front, false);
 
 	Vertices rect_right = rectangle(glm::vec3(start_2, start.z + -1 * depth / 2), glm::vec3(start_2, start.z + depth / 2),
 	                                glm::vec3(finish_2, start.z + -1 * depth / 2), glm::vec3(finish_2, start.z + depth / 2));
 
-	connected_rectangle.add(rect_right);
+	connected_rectangle.add(rect_right, false);
 
 	Vertices rect_left = rectangle(glm::vec3(start_1, start.z + depth / 2), glm::vec3(start_1, start.z + -1 * depth / 2),
 	                               glm::vec3(finish_1, start.z + depth / 2), glm::vec3(finish_1, start.z + -1 * depth / 2));
 
-	connected_rectangle.add(rect_left);
+	connected_rectangle.add(rect_left, false);
 
 	Vertices rect_back = rectangle(glm::vec3(start_2, start.z + depth / 2), glm::vec3(start_1, start.z + depth / 2),
 	                               glm::vec3(finish_2, start.z + depth / 2), glm::vec3(finish_1, start.z + depth / 2));
 
-	connected_rectangle.add(rect_back);
+	connected_rectangle.add(rect_back, true);
 
 	if (with_top_and_bottom)
 	{
 		Vertices rect_top = rectangle(glm::vec3(finish_2, start.z + depth / 2), glm::vec3(finish_1, start.z + depth / 2),
 		                              glm::vec3(finish_2, start.z + -1 * depth / 2), glm::vec3(finish_1, start.z + -1 * depth / 2));
 
-		connected_rectangle.add(rect_top);
+		connected_rectangle.add(rect_top, false);
 
 		Vertices rect_bottom = rectangle(glm::vec3(start_1, start.z + depth / 2), glm::vec3(start_2, start.z + depth / 2),
 		                                 glm::vec3(start_1, start.z + -1 * depth / 2), glm::vec3(start_2, start.z + -1 * depth / 2));
 
-		connected_rectangle.add(rect_bottom);
+		connected_rectangle.add(rect_bottom, true);
 	}
 
 	return connected_rectangle;
@@ -389,7 +389,12 @@ Vertices wheel(unsigned int nr_of_vertices, float depth, float thickness, float 
 	const float spokes_depth = 0.15;
 	const float spokes_width = inner_circle_radius * sin(M_PI / nr_of_spokes);
 
-	Vertices outer = connectedRings(nr_of_vertices, depth, ring_inner_radius, radius);
+	Vertices outer = connectedRings(nr_of_vertices, depth / 2, ring_inner_radius, radius);
+	outer.moveBy(0, 0, depth / 4);
+	Vertices outer2 = connectedRings(nr_of_vertices, depth / 2, ring_inner_radius, radius - thickness / 2);
+	outer2.moveBy(0, 0, -depth / 4);
+	outer.add(outer2);
+
 	Vertices inner = connectedPolygons(nr_of_vertices, inner_circle_thickness, inner_circle_radius);
 	Vertices spokes;
 
@@ -421,10 +426,10 @@ Vertices wheel(unsigned int nr_of_vertices, float depth, float thickness, float 
 
 		spokes_start.push_back(glm::vec2(x, y));
 
-		x1 = x1 / inner_circle_radius * radius;
-		y1 = y1 / inner_circle_radius * radius;
-		x2 = x2 / inner_circle_radius * radius;
-		y2 = y2 / inner_circle_radius * radius;
+		x1 = x1 / inner_circle_radius * ring_inner_radius;
+		y1 = y1 / inner_circle_radius * ring_inner_radius;
+		x2 = x2 / inner_circle_radius * ring_inner_radius;
+		y2 = y2 / inner_circle_radius * ring_inner_radius;
 
 		def_x = (x2 - x1) / 4;
 		def_y = (y2 - y1) / 4;
@@ -455,7 +460,7 @@ Vertices world(unsigned int nr_of_vertices, float radius)
 	double alpha_horizontal = 0, alpha_vertical = M_PI / 2;
 	float x, y, z;
 
-	for (unsigned int i = 0; i < nr_of_vertices * nr_of_vertices; ++i)
+	for (unsigned int i = 0; i < nr_of_vertices * nr_of_vertices / 4; ++i)
 	{
 		z = radius * sin(alpha_vertical) * cos(alpha_horizontal);
 		x = radius * sin(alpha_vertical) * sin(alpha_horizontal);
@@ -485,7 +490,7 @@ Vertices world(unsigned int nr_of_vertices, float radius)
 			texture_positions.push_back(1);
 			texture_positions.push_back(alpha_vertical / (M_PI / 2));
 
-			alpha_vertical -= M_PI / 2 / (nr_of_vertices - 1);
+			alpha_vertical -= M_PI / 2 / (nr_of_vertices / 4 - 1);
 
 			/*if (alpha_vertical < M_PI / 2 / (nr_of_vertices - 1))
 				alpha_vertical = 0;*/
@@ -494,7 +499,7 @@ Vertices world(unsigned int nr_of_vertices, float radius)
 
 	for (unsigned int i = 0; i < nr_of_vertices; ++i)
 	{
-		for (unsigned int j = 0; j < nr_of_vertices - 1; ++j)
+		for (unsigned int j = 0; j < nr_of_vertices / 4 - 1; ++j)
 		{
 			indices.push_back(i + (j + 1) * (nr_of_vertices + 1));
 			indices.push_back(i + j * (nr_of_vertices + 1) + 1);
