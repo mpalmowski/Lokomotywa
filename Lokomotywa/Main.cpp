@@ -15,8 +15,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	 * Sterowanie:
 	 *	strza³ki - poruszanie kamery wokó³ obiektu
 	 *	w, s - kamera bli¿ej/dalej obiektu
-	 *	z, x - oœwietlenie ogólne +/-
-	 *	c, v - oœwietlenie punktowe +/-
+	 *	z, x - oœwietlenie punktowe +/-
 	 */
 	if (action == GLFW_PRESS || action == GLFW_REPEAT)
 	{
@@ -44,16 +43,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 			camera->moveAlongRadius(RAD_STEP);
 			break;
 		case GLFW_KEY_Z:
-			camera->adjustLight(-LIGHT_STEP, 0);
+			camera->adjustLight(-LIGHT_STEP);
 			break;
 		case GLFW_KEY_X:
-			camera->adjustLight(LIGHT_STEP, 0);
-			break;
-		case GLFW_KEY_C:
-			camera->adjustLight(0, -LIGHT_STEP);
-			break;
-		case GLFW_KEY_V:
-			camera->adjustLight(0, LIGHT_STEP);
+			camera->adjustLight(LIGHT_STEP);
 			break;
 		}
 	}

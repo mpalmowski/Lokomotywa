@@ -22,6 +22,6 @@ Vertices connectedRectangles(glm::vec2 start, glm::vec2 finish, float width, flo
 
 Vertices wheel(unsigned int nr_of_vertices, float depth, float thickness, float nr_of_spokes, float radius = 1);
 
-Vertices world(unsigned int nr_of_vertices, float radius);
+Vertices sphere(unsigned int nr_of_vertices, float radius, bool half_sphere = false);
 
 #endif

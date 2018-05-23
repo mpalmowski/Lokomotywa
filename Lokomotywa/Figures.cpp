@@ -266,7 +266,7 @@ Vertices rectangle(glm::vec3 bottom_left, glm::vec3 bottom_right, glm::vec3 top_
 	width = glm::length(glm::vec3(bottom_right - bottom_left));
 	height = glm::length(glm::vec3(top_left - bottom_left));
 
-	if(width/height > 10 || width/height < 0.01)
+	/*if(width/height > 10 || width/height < 0.01)
 	{
 		float min = std::min(width, height);
 		width /= min;
@@ -276,12 +276,11 @@ Vertices rectangle(glm::vec3 bottom_left, glm::vec3 bottom_right, glm::vec3 top_
 	{
 		width /= 5;
 		height /= 5;
-	}
-	else if (width > 1 || height > 1)
+	}*/
+	if (width > 1 || height > 1)
 	{
-		float max = std::max(width, height);
-		width /= max;
-		height /= max;
+		width /= 5;
+		height /= 5;
 	}
 
 	rect.positions.push_back(bottom_left.x);
@@ -451,7 +450,7 @@ Vertices wheel(unsigned int nr_of_vertices, float depth, float thickness, float 
 	return outer;
 }
 
-Vertices world(unsigned int nr_of_vertices, float radius)
+Vertices sphere(unsigned int nr_of_vertices, float radius, bool half_sphere)
 {
 	std::vector<float> positions;
 	std::vector<float> texture_positions;
@@ -460,7 +459,18 @@ Vertices world(unsigned int nr_of_vertices, float radius)
 	double alpha_horizontal = 0, alpha_vertical = M_PI / 2;
 	float x, y, z;
 
-	for (unsigned int i = 0; i < nr_of_vertices * nr_of_vertices / 4; ++i)
+	unsigned int vertical_vertices = nr_of_vertices / 4;
+	float max_vertical_angle = M_PI / 2;
+
+	if (!half_sphere)
+	{
+		alpha_vertical = M_PI - 0.0001;
+		vertical_vertices *= 2;
+		max_vertical_angle *= 2;
+	}
+		
+
+	for (unsigned int i = 0; i < nr_of_vertices * vertical_vertices; ++i)
 	{
 		z = radius * sin(alpha_vertical) * cos(alpha_horizontal);
 		x = radius * sin(alpha_vertical) * sin(alpha_horizontal);
@@ -471,7 +481,7 @@ Vertices world(unsigned int nr_of_vertices, float radius)
 		positions.push_back(z);
 
 		texture_positions.push_back(alpha_horizontal / (2 * M_PI));
-		texture_positions.push_back(alpha_vertical / (M_PI / 2));
+		texture_positions.push_back(alpha_vertical / max_vertical_angle);
 
 		alpha_horizontal += 2 * M_PI / nr_of_vertices;
 
@@ -488,26 +498,26 @@ Vertices world(unsigned int nr_of_vertices, float radius)
 			positions.push_back(z);
 
 			texture_positions.push_back(1);
-			texture_positions.push_back(alpha_vertical / (M_PI / 2));
+			texture_positions.push_back(alpha_vertical / max_vertical_angle);
 
-			alpha_vertical -= M_PI / 2 / (nr_of_vertices / 4 - 1);
+			alpha_vertical -= max_vertical_angle / (vertical_vertices - 1);
 
-			/*if (alpha_vertical < M_PI / 2 / (nr_of_vertices - 1))
-				alpha_vertical = 0;*/
+			if (alpha_vertical <= 0)
+				alpha_vertical = 0.0001;
 		}
 	}
 
 	for (unsigned int i = 0; i < nr_of_vertices; ++i)
 	{
-		for (unsigned int j = 0; j < nr_of_vertices / 4 - 1; ++j)
+		for (unsigned int j = 0; j < vertical_vertices - 1; ++j)
 		{
 			indices.push_back(i + (j + 1) * (nr_of_vertices + 1));
-			indices.push_back(i + j * (nr_of_vertices + 1) + 1);
 			indices.push_back(i + j * (nr_of_vertices + 1));
+			indices.push_back(i + j * (nr_of_vertices + 1) + 1);
 
 			indices.push_back(i + (j + 1) * (nr_of_vertices + 1));
-			indices.push_back(i + (j + 1) * (nr_of_vertices + 1) + 1);
 			indices.push_back(i + j * (nr_of_vertices + 1) + 1);
+			indices.push_back(i + (j + 1) * (nr_of_vertices + 1) + 1);
 		}
 	}
 

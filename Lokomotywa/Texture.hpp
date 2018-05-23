@@ -9,6 +9,14 @@ struct Texture
 {
 	GLuint texture;
 
+	Texture(const std::string &filename, bool alpha_channel = false)
+	{
+		if (!alpha_channel)
+			loadRGB(filename);
+		else
+			loadRGBA(filename);
+	}
+
 	~Texture()
 	{
 		glDeleteTextures(1, &texture);
@@ -62,12 +70,6 @@ struct Texture
 
 	void bind(unsigned int texture_unit)
 	{
-		while (texture_unit < 0)
-			texture_unit += 31;
-
-		while (texture_unit > 31)
-			texture_unit -= 31;
-
 		if (texture_unit < 0 || texture_unit > 31)
 			std::cerr << "Texture unit out of range: " << texture_unit << std::endl;
 

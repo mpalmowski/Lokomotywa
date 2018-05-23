@@ -13,8 +13,9 @@ const float WHEEL_RADIUS = 1;
 const float WHEEL_DEPTH = 0.25;
 const float WHEEL_THICKNESS = 0.2;
 const unsigned int NR_OF_WHEEL_SPOKES = 16;
+const unsigned int NR_OF_WHEELS = 6;
 
-const float WHEELBASE = 4;
+const float WHEELBASE = (NR_OF_WHEELS - 2) * (WHEEL_RADIUS + WHEEL_RADIUS / 10);
 const float TRACK_WIDTH = 2.5;
 
 const float BAR_WIDTH = 0.15;
@@ -39,8 +40,6 @@ const float LOCOMOTIVE_SPEED = 2 * M_PI * WHEEL_RADIUS / (2 * M_PI / WHEEL_ROT_S
 
 const float GROUND_Z = -WHEEL_RADIUS - RAILS_HEIGHT - RAIL_PLANK_HEIGHT;
 
-const unsigned int NR_OF_WHEELS = 4;
-
 class Locomotive
 {
 private:
@@ -53,33 +52,49 @@ private:
 	RenderedObject* walls[2];
 	RenderedObject* sky;
 
+	std::vector<Texture*> textures;
+
 	Shader* sky_shader;
 public:
 	Locomotive()
 	{
-		createWheels("red_painted_metal.png");
+		loadTextures();
+
+		createWheels(0);
 
 		chassis = new RenderedObject(connectedRectangles(glm::vec2(-1 * WHEELBASE / 2 - WHEEL_RADIUS, 0),
 		                                                 glm::vec2(WHEELBASE / 2 + WHEEL_RADIUS, 0),
-		                                                 0.5, TRACK_WIDTH - WHEEL_DEPTH, true), "green_planks.jpg");
+		                                                 0.5, TRACK_WIDTH - WHEEL_DEPTH, true), textures[1]);
 
-		createBars("red_painted_metal.png");
+		createBars(0);
 
-		createRails("steel.jpg");
+		createRails(2);
 
-		createRailPlanks("wood.png");
+		createRailPlanks(3);
 
-		createGround("grass.jpg");
+		createGround(4);
 
-		createWalls("bricks.jpg");
+		createWalls(5);
 
-		sky = new RenderedObject(world(40, GROUND_LENGTH / 2), "sky_povray.jpg");
+		sky = new RenderedObject(sphere(40, GROUND_LENGTH / 2, true), textures[6]);
 		sky->moveBy(0, GROUND_Z, 0);
+		sky->rotateBy(0, M_PI, 0);
 
 		sky_shader = new Shader("sky_shader");
 	}
 
-	void createWheels(const std::string &filename)
+	void loadTextures()
+	{
+		textures.push_back(new Texture("red_painted_metal.png"));
+		textures.push_back(new Texture("green_planks.jpg"));
+		textures.push_back(new Texture("steel.jpg"));
+		textures.push_back(new Texture("wood.png"));
+		textures.push_back(new Texture("grass.jpg"));
+		textures.push_back(new Texture("bricks.jpg"));
+		textures.push_back(new Texture("sky.jpg"));
+	}
+
+	void createWheels(int texture_id)
 	{
 		for (unsigned int i = 0; i < NR_OF_WHEELS; ++i)
 		{
@@ -87,48 +102,48 @@ public:
 
 			if (i < NR_OF_WHEELS / 2)
 			{
-				wheels[i] = new RenderedObject(temp, filename);
-				wheels[i]->moveBy(WHEELBASE / 2 - i % (NR_OF_WHEELS / 2) * WHEELBASE / ((NR_OF_WHEELS - 1) / 2), 0,
+				wheels[i] = new RenderedObject(temp, textures[texture_id]);
+				wheels[i]->moveBy(WHEELBASE / 2 - i % (NR_OF_WHEELS / 2) * WHEELBASE / ((NR_OF_WHEELS) / 2 - 1), 0,
 				                  -1 * TRACK_WIDTH / 2);
 			}
 			else
 			{
 				temp.turnBack();
-				wheels[i] = new RenderedObject(temp, filename);
-				wheels[i]->moveBy(WHEELBASE / 2 - i % (NR_OF_WHEELS / 2) * WHEELBASE / ((NR_OF_WHEELS - 1) / 2), 0,
+				wheels[i] = new RenderedObject(temp, textures[texture_id]);
+				wheels[i]->moveBy(WHEELBASE / 2 - i % (NR_OF_WHEELS / 2) * WHEELBASE / ((NR_OF_WHEELS) / 2 - 1), 0,
 				                  TRACK_WIDTH / 2);
 			}
 		}
 	}
 
-	void createBars(const std::string &filename)
+	void createBars(int texture_id)
 	{
-		Vertices connection_verts[4];
+		Vertices connection_verts[NR_OF_WHEELS];
 		Vertices bar_verts[2];
 
 		for(int i = 0; i < 2; ++i)
 			bar_verts[i] = connectedRectangles(glm::vec2(-1 * WHEELBASE / 2, 0), glm::vec2(WHEELBASE / 2, 0), BAR_WIDTH, BAR_DEPTH, true);
 
-		int side_x = 1, side_z = 1;
-		for (int i = 0; i < 4; ++i)
+		int side_z = 1;
+		for (int i = 0; i < NR_OF_WHEELS; ++i)
 		{
-			if (i > 1)
-				side_x = -1;
 			connection_verts[i] = connectedPolygons(WHEEL_VERTICES, WHEEL_DEPTH + BAR_DEPTH * 1.2, BAR_WIDTH);
 
-			side_z = -2 * (i % 2) + 1;
-			connection_verts[i].moveBy(side_x * WHEELBASE / 2, 0, side_z * (WHEEL_DEPTH / 2 - BAR_DEPTH * 0.1));
-			bar_verts[i % 2].add(connection_verts[i]);
+			if (i >= NR_OF_WHEELS / 2)
+				side_z = -1;
+
+			connection_verts[i].moveBy(WHEELBASE / 2 - i % (NR_OF_WHEELS / 2) * WHEELBASE / ((NR_OF_WHEELS) / 2 - 1), 0, side_z * (WHEEL_DEPTH / 2 - BAR_DEPTH * 0.1));
+			bar_verts[(side_z - 1)/(-2)].add(connection_verts[i]);
 		}
 
 		for (int i = 0; i < 2; ++i)
-			bar[i] = new RenderedObject(bar_verts[i], filename);
+			bar[i] = new RenderedObject(bar_verts[i], textures[texture_id]);
 
 		bar[0]->moveBy(0, BAR_POS_RADIUS, -1 * (TRACK_WIDTH + WHEEL_DEPTH + BAR_DEPTH) / 2);
 		bar[1]->moveBy(0, BAR_POS_RADIUS, (TRACK_WIDTH + WHEEL_DEPTH + BAR_DEPTH) / 2);
 	}
 
-	void createRails(const std::string filename)
+	void createRails(int texture_id)
 	{
 		int side = 0;
 
@@ -147,9 +162,9 @@ public:
 				RAILS_HEIGHT, WHEEL_DEPTH / 2);
 
 			rails_vert[i].add(connectedRectangles(
-				glm::vec3(-GROUND_LENGTH / 2, GROUND_Z + RAIL_PLANK_HEIGHT + RAILS_HEIGHT / 2, side * TRACK_WIDTH / 2 + WHEEL_DEPTH/4),
-				glm::vec3(GROUND_LENGTH / 2, GROUND_Z + RAIL_PLANK_HEIGHT + RAILS_HEIGHT / 2, side * TRACK_WIDTH / 2 + WHEEL_DEPTH/4),
-				RAILS_HEIGHT + WHEEL_THICKNESS, WHEEL_DEPTH / 2));
+				glm::vec3(-GROUND_LENGTH / 2, GROUND_Z + RAIL_PLANK_HEIGHT + RAILS_HEIGHT / 2 + WHEEL_THICKNESS / 4, side * TRACK_WIDTH / 2 + WHEEL_DEPTH/4),
+				glm::vec3(GROUND_LENGTH / 2, GROUND_Z + RAIL_PLANK_HEIGHT + RAILS_HEIGHT / 2 + WHEEL_THICKNESS / 4, side * TRACK_WIDTH / 2 + WHEEL_DEPTH/4),
+				RAILS_HEIGHT + WHEEL_THICKNESS / 2, WHEEL_DEPTH / 2));
 
 			if (side == -1)
 			{
@@ -164,11 +179,11 @@ public:
 
 		rails_vert[0].add(rails_vert[2]);
 		rails_vert[1].add(rails_vert[3]);
-		rails[0] = new RenderedObject(rails_vert[0], filename);
-		rails[1] = new RenderedObject(rails_vert[1], filename);
+		rails[0] = new RenderedObject(rails_vert[0], textures[texture_id]);
+		rails[1] = new RenderedObject(rails_vert[1], textures[texture_id]);
 	}
 
-	void createRailPlanks(const std::string &filename)
+	void createRailPlanks(int texture_id)
 	{
 		Vertices planks_vert;
 		Vertices first_plank = connectedRectangles(glm::vec2(-GROUND_LENGTH / 2, GROUND_Z + RAIL_PLANK_HEIGHT / 2),
@@ -186,21 +201,21 @@ public:
 		}
 		planks_vert.calcNormals();
 
-		rail_planks[1] = new RenderedObject(planks_vert, filename);
+		rail_planks[1] = new RenderedObject(planks_vert, textures[texture_id]);
 
 		planks_vert.moveBy(-GROUND_LENGTH, 0, 0);
 
-		rail_planks[0] = new RenderedObject(planks_vert, filename);
+		rail_planks[0] = new RenderedObject(planks_vert, textures[texture_id]);
 	}
 
-	void createGround(const std::string &filename)
+	void createGround(int texture_id)
 	{
 		for (int i = 0; i < 2; ++i)
 		{
 			ground[i] = new RenderedObject(rectangle(glm::vec3(-GROUND_LENGTH / 2, 0, -GROUND_LENGTH / 2),
 			                                         glm::vec3(-GROUND_LENGTH / 2, 0, GROUND_LENGTH / 2),
 			                                         glm::vec3(GROUND_LENGTH / 2, 0, -GROUND_LENGTH / 2),
-			                                         glm::vec3(GROUND_LENGTH / 2, 0, GROUND_LENGTH / 2)), filename);
+			                                         glm::vec3(GROUND_LENGTH / 2, 0, GROUND_LENGTH / 2)), textures[texture_id]);
 
 			if (i == 0)
 				ground[i]->moveBy(-GROUND_LENGTH, 0, 0);
@@ -209,7 +224,7 @@ public:
 		}
 	}
 
-	void createWalls(const std::string &filename)
+	void createWalls(int texture_id)
 	{
 		int side = 0;
 
@@ -238,8 +253,34 @@ public:
 		temp[0].add(temp[2]);
 		temp[1].add(temp[3]);
 
-		walls[0] = new RenderedObject(temp[0], filename);
-		walls[1] = new RenderedObject(temp[1], filename);
+		walls[0] = new RenderedObject(temp[0], textures[texture_id]);
+		walls[1] = new RenderedObject(temp[1], textures[texture_id]);
+	}
+
+	void createTrees(int texture_id)
+	{
+		const int NR_OF_TREES = 2;
+		const float TREE_RADIUS = 2;
+		const float TREE_HEIGHT = 7;
+
+		Vertices tree_vert;
+		for(int i = 0; i < NR_OF_TREES; ++i)
+		{
+			Vertices temp;
+
+			temp = sphere(40, TREE_RADIUS);
+
+			int side_z = 1;
+			if (i < NR_OF_TREES / 2)
+				side_z = -1;
+
+			temp.moveBy(0, TREE_HEIGHT - 2 * TREE_RADIUS, side_z * GROUND_WIDTH / 2);
+
+			tree_vert.add(temp, false);
+		}
+		tree_vert.calcNormals();
+
+		//trees = new RenderedObject(tree_vert, filename);
 	}
 
 	void moveForward()

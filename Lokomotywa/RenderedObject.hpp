@@ -6,19 +6,14 @@ class RenderedObject
 private:
 	Vertices vertices;
 	Mesh *mesh;
-	Texture texture;
+	Texture *texture;
 	Transform transform;
 
 	float alpha = 0;
 public:
-	RenderedObject(Vertices &vertices, const std::string &texture_file, bool alpha_channel = false): vertices(vertices)
+	RenderedObject(Vertices &vertices, Texture *texture): vertices(vertices), texture(texture)
 	{
 		mesh = new Mesh(this->vertices);
-
-		if (!alpha_channel)
-			texture.loadRGB(texture_file);
-		else
-			texture.loadRGBA(texture_file);
 	}
 
 	~RenderedObject()
@@ -78,10 +73,10 @@ public:
 	void draw(unsigned int texture_unit, Shader &shader, Camera &camera)
 	{
 		shader.bind();
-		texture.bind(texture_unit);
+		texture->bind(texture_unit);
 		shader.update(transform, camera);
 		mesh->draw();
-		texture.unbind(texture_unit);
+		texture->unbind(texture_unit);
 	}
 };
 

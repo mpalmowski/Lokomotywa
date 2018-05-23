@@ -11,6 +11,8 @@ const float FIELD_OF_VIEW = 70.0;
 const float Z_NEAR = 0.01;
 const float Z_FAR = 1000.0;
 
+const float AMBIENT_LIGHT_PERC = 0.25;
+
 class Camera
 {
 private:
@@ -76,20 +78,16 @@ public:
 		forward.y = -1 * position.y;
 	}
 
-	void adjustLight(float x, float y)
+	void adjustLight(float point_light)
 	{
-		light_power.x += x;
-		light_power.y += y;
-
-		if (light_power.x < 0)
-			light_power.x = 0;
-		else if (light_power.x > 1)
-			light_power.x = 1;
+		light_power.y += point_light;
 
 		if (light_power.y < 0)
 			light_power.y = 0;
 		else if (light_power.y > 1)
 			light_power.y = 1;
+
+		light_power.x = light_power.y * AMBIENT_LIGHT_PERC;
 	}
 };
 
