@@ -66,7 +66,7 @@ public:
 		                                                 glm::vec2(WHEELBASE / 2 + WHEEL_RADIUS, 0),
 		                                                 0.5, TRACK_WIDTH - WHEEL_DEPTH, true), textures[1]);
 
-		createBars(0);
+		createBars(7);
 
 		createRails(2);
 
@@ -92,6 +92,7 @@ public:
 		textures.push_back(new Texture("grass.jpg"));
 		textures.push_back(new Texture("bricks.jpg"));
 		textures.push_back(new Texture("sky.jpg"));
+		textures.push_back(new Texture("metal-texture.png"));
 	}
 
 	void createWheels(int texture_id)
@@ -257,32 +258,6 @@ public:
 		walls[1] = new RenderedObject(temp[1], textures[texture_id]);
 	}
 
-	void createTrees(int texture_id)
-	{
-		const int NR_OF_TREES = 2;
-		const float TREE_RADIUS = 2;
-		const float TREE_HEIGHT = 7;
-
-		Vertices tree_vert;
-		for(int i = 0; i < NR_OF_TREES; ++i)
-		{
-			Vertices temp;
-
-			temp = sphere(40, TREE_RADIUS);
-
-			int side_z = 1;
-			if (i < NR_OF_TREES / 2)
-				side_z = -1;
-
-			temp.moveBy(0, TREE_HEIGHT - 2 * TREE_RADIUS, side_z * GROUND_WIDTH / 2);
-
-			tree_vert.add(temp, false);
-		}
-		tree_vert.calcNormals();
-
-		//trees = new RenderedObject(tree_vert, filename);
-	}
-
 	void moveForward()
 	{
 		for (int i = 0; i < 2; ++i)
@@ -314,16 +289,29 @@ public:
 	~Locomotive()
 	{
 		for (unsigned int i = 0; i < NR_OF_WHEELS; ++i)
-		{
 			delete wheels[i];
-		}
+
+		for (int i = 0; i < 2; ++i)
+			delete bar[i];
 
 		delete chassis;
 
-		for (int i = 0; i < 2; i++)
-		{
-			delete bar[i];
-		}
+		for (int i = 0; i < 2; ++i)
+			delete rails[i];
+
+		for (int i = 0; i < 2; ++i)
+			delete rail_planks[i];
+
+		for (int i = 0; i < 2; ++i)
+			delete ground[i];
+
+		for (int i = 0; i < 2; ++i)
+			delete walls[i];
+
+		delete sky;
+
+		for(int i = 0; i < textures.size(); ++i)
+			delete textures[i];
 
 		delete sky_shader;
 	}

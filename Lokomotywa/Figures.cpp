@@ -266,17 +266,6 @@ Vertices rectangle(glm::vec3 bottom_left, glm::vec3 bottom_right, glm::vec3 top_
 	width = glm::length(glm::vec3(bottom_right - bottom_left));
 	height = glm::length(glm::vec3(top_left - bottom_left));
 
-	/*if(width/height > 10 || width/height < 0.01)
-	{
-		float min = std::min(width, height);
-		width /= min;
-		height /= min;
-	}
-	else if (width > 5 || height > 5)
-	{
-		width /= 5;
-		height /= 5;
-	}*/
 	if (width > 1 || height > 1)
 	{
 		width /= 5;
