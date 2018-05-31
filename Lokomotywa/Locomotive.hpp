@@ -78,7 +78,7 @@ public:
 
 		sky = new RenderedObject(sphere(40, GROUND_LENGTH / 2, true), textures[6]);
 		sky->moveBy(0, GROUND_Z, 0);
-		sky->rotateBy(0, M_PI, 0);
+		//sky->rotateBy(0, M_PI, 0);
 
 		sky_shader = new Shader("sky_shader");
 	}
