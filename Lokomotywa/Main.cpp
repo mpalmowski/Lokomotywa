@@ -7,7 +7,9 @@
 const float ROT_ANGLE = 0.03;
 const float RAD_STEP = 0.1;
 const float LIGHT_STEP = 0.05;
+const float DELTA_SPEED = 0.001;
 Camera *camera = nullptr;
+Locomotive *locomotive = nullptr;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
@@ -15,7 +17,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	 * Sterowanie:
 	 *	strza³ki - poruszanie kamery wokó³ obiektu
 	 *	w, s - kamera bli¿ej/dalej obiektu
-	 *	z, x - oœwietlenie punktowe +/-
+	 *	e, d - oœwietlenie punktowe +/-
+	 *	q, a - prêdkoœæ lokomotywy +/-
 	 */
 	if (action == GLFW_PRESS || action == GLFW_REPEAT)
 	{
@@ -42,11 +45,17 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		case GLFW_KEY_S:
 			camera->moveAlongRadius(RAD_STEP);
 			break;
-		case GLFW_KEY_Z:
+		case GLFW_KEY_E:
+			camera->adjustLight(LIGHT_STEP);
+			break;
+		case GLFW_KEY_D:
 			camera->adjustLight(-LIGHT_STEP);
 			break;
-		case GLFW_KEY_X:
-			camera->adjustLight(LIGHT_STEP);
+		case GLFW_KEY_Q:
+			locomotive->adjustSpeed(DELTA_SPEED);
+			break;
+		case GLFW_KEY_A:
+			locomotive->adjustSpeed(-DELTA_SPEED);
 			break;
 		}
 	}
@@ -59,7 +68,7 @@ int main()
 	camera = new Camera(12, (float)WIDTH / (float)HEIGHT);
 	Shader shader("shader");
 
-	Locomotive *locomotive = new Locomotive();
+	locomotive = new Locomotive();
 
 	int fps = 0;
 	auto start = std::chrono::system_clock::now();

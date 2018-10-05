@@ -35,8 +35,8 @@ const int NR_OF_RAIL_PLANKS = GROUND_LENGTH / RAIL_PLANK_WIDTH / 2;
 const float WALL_HEIGHT = 4;
 const float WALL_THICKNESS = 2;
 
-const float WHEEL_ROT_SPEED = 0.01;
-const float LOCOMOTIVE_SPEED = 2 * M_PI * WHEEL_RADIUS / (2 * M_PI / WHEEL_ROT_SPEED);
+float wheel_rot_speed = 0.01;
+float locomotive_speed = 2 * M_PI * WHEEL_RADIUS / (2 * M_PI / wheel_rot_speed);
 
 const float GROUND_Z = -WHEEL_RADIUS - RAILS_HEIGHT - RAIL_PLANK_HEIGHT;
 
@@ -262,10 +262,10 @@ public:
 	{
 		for (int i = 0; i < 2; ++i)
 		{
-			ground[i]->moveBy(LOCOMOTIVE_SPEED, 0, 0);
-			walls[i]->moveBy(LOCOMOTIVE_SPEED, 0, 0);
-			rails[i]->moveBy(LOCOMOTIVE_SPEED, 0, 0);
-			rail_planks[i]->moveBy(LOCOMOTIVE_SPEED, 0, 0);
+			ground[i]->moveBy(locomotive_speed, 0, 0);
+			walls[i]->moveBy(locomotive_speed, 0, 0);
+			rails[i]->moveBy(locomotive_speed, 0, 0);
+			rail_planks[i]->moveBy(locomotive_speed, 0, 0);
 		}
 
 		if (ground[1]->getPosition().x >= GROUND_LENGTH)
@@ -284,6 +284,15 @@ public:
 			std::swap(rail_planks[0], rail_planks[1]);
 			rail_planks[0]->moveBy(-2 * dist, 0, 0);
 		}
+	}
+
+	void adjustSpeed(float delta_speed)
+	{
+		wheel_rot_speed += delta_speed;
+		if (wheel_rot_speed < 0)
+			wheel_rot_speed = 0;
+
+		locomotive_speed = 2 * M_PI * WHEEL_RADIUS / (2 * M_PI / wheel_rot_speed);
 	}
 
 	~Locomotive()
@@ -324,7 +333,7 @@ public:
 		{
 			wheels[i]->draw(texture_unit, shader, camera);
 
-			wheels[i]->rotateBy(0, 0, WHEEL_ROT_SPEED);
+			wheels[i]->rotateBy(0, 0, wheel_rot_speed);
 		}
 
 		chassis->draw(texture_unit, shader, camera);
@@ -333,7 +342,7 @@ public:
 		{
 			bar[i]->draw(texture_unit, shader, camera);
 
-			bar[i]->moveInCircleByAngle(WHEEL_ROT_SPEED, BAR_POS_RADIUS);
+			bar[i]->moveInCircleByAngle(wheel_rot_speed, BAR_POS_RADIUS);
 		}
 
 		for (int i = 0; i < 2; ++i)
